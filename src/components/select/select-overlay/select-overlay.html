@@ -1,0 +1,12 @@
+@if (selectService.isOpen()) {
+  <div
+    #overlayElement
+    data-select-overlay
+    [id]="selectService.overlayId"
+    (mousedown)="$event.preventDefault()"
+  >
+    <ul data-select-list role="listbox" (mouseleave)="clearFocusedItem()">
+      <ng-content />
+    </ul>
+  </div>
+}

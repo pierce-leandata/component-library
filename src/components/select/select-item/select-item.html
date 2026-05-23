@@ -1,0 +1,12 @@
+<li
+  data-select-item
+  role="option"
+  [class.focused]="isFocused()"
+  [attr.aria-selected]="isSelected()"
+  (click)="onSelect()"
+  (keydown)="onKeyDown($event)"
+  (mouseenter)="onMouseEnter()"
+  [tabindex]="-1"
+>
+  <div #label><ng-content /></div>
+</li>
