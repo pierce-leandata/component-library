@@ -6,9 +6,9 @@ import { SelectService } from '@components/select/select.service'
   templateUrl: './select-item.html',
 })
 export class SelectItemComponent {
-  selectService = inject(SelectService)
-
   value = input.required<string>()
+
+  selectService = inject(SelectService)
 
   isSelected = computed(() => this.selectService.value() === this.value())
   isFocused = computed(() => this.selectService.focusedItem()?.value() === this.value())

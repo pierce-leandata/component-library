@@ -1,4 +1,4 @@
-import { Component, contentChildren, ElementRef, inject, viewChild } from '@angular/core'
+import { Component, contentChildren, effect, ElementRef, inject, viewChild } from '@angular/core'
 import { SelectItemComponent } from '@components/select/select-item/select-item'
 import { SelectService } from '@components/select/select.service'
 
@@ -14,8 +14,8 @@ export class SelectOverlayComponent {
   private overlayElement = viewChild<ElementRef<HTMLElement>>('overlayElement')
 
   constructor() {
-    this.selectService.items = this.items
-    this.selectService.overlayElement = this.overlayElement
+    effect(() => this.selectService.items.set(this.items()))
+    effect(() => this.selectService.overlayElement.set(this.overlayElement()))
   }
 
   protected clearFocusedItem() {

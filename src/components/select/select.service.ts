@@ -1,4 +1,12 @@
-import { DestroyRef, ElementRef, inject, Injectable, Signal, signal } from '@angular/core'
+import {
+  DestroyRef,
+  ElementRef,
+  inject,
+  Injectable,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core'
 import { generateId } from '@utils/utils'
 
 export interface SelectItem {
@@ -14,10 +22,10 @@ export class SelectService {
   isOpen = signal(false)
   isOverlayMounted = signal(false)
   value = signal<string | undefined>(undefined)
-  items: Signal<readonly SelectItem[]> = signal([])
+  items: WritableSignal<readonly SelectItem[]> = signal([])
   focusedItem = signal<SelectItem | undefined>(undefined)
-  overlayElement: Signal<ElementRef<HTMLElement> | undefined> = signal(undefined)
-  triggerElement: Signal<ElementRef<HTMLElement> | undefined> = signal(undefined)
+  overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
+  triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
 
   readonly overlayId = generateId()
 

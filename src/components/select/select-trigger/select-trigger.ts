@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, signal } from '@angular/core'
+import { Directive, ElementRef, inject } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
 
 @Directive({
@@ -18,7 +18,7 @@ export class SelectTriggerDirective {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef)
 
   constructor() {
-    this.selectService.triggerElement = signal(this.elementRef)
+    this.selectService.triggerElement.set(this.elementRef)
   }
 
   protected onClick() {
