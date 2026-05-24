@@ -99,7 +99,7 @@ export class SelectService {
     this.close()
   }
 
-  private onKeyDown(e: KeyboardEvent) {
+  private onKeyDown = (e: KeyboardEvent) => {
     if (!['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
       return
     }
@@ -132,7 +132,7 @@ export class SelectService {
 
   // Will not fire when clicking on the select trigger if it's already focused
   // Trigger handles closing on click
-  private onFocusOut(e: FocusEvent) {
+  private onFocusOut = (e: FocusEvent) => {
     const overlay = this.overlayElement()?.nativeElement
     const target = e.relatedTarget as Node | null
     if (!overlay?.contains(target)) {
