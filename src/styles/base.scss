@@ -5,3 +5,23 @@ body {
 .focused {
   outline: 2px solid red;
 }
+
+[data-select-overlay] {
+  padding: 10px;
+  background: #eee;
+  border-radius: 4px;
+  transition:
+    opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
+    scale 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transform-origin: top center;
+
+  &[data-state='open'] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  &[data-state='closed'] {
+    opacity: 0;
+    scale: 0.9;
+  }
+}

@@ -8,7 +8,9 @@ export interface SelectItem {
 
 @Injectable()
 export class SelectService {
+  /** DO NOT SET DIRECTLY. Use `open()` and `close()` methods */
   isOpen = signal(false)
+  isOverlayMounted = signal(false)
   value = signal<string | undefined>(undefined)
   items: Signal<readonly SelectItem[]> = signal([])
   focusedItem = signal<SelectItem | undefined>(undefined)
@@ -19,19 +21,44 @@ export class SelectService {
 
   constructor() {
     effect((onCleanup) => {
-      if (!this.isOpen()) {
-        this.focusedItem.set(undefined)
-        return
-      }
-
-      const onKeyDown = (e: KeyboardEvent) => this.onKeyDown(e)
-      const onFocusOut = (e: FocusEvent) => this.onFocusOut(e)
-      window.addEventListener('keydown', onKeyDown)
-      window.addEventListener('focusout', onFocusOut)
       onCleanup(() => {
-        window.removeEventListener('keydown', onKeyDown)
-        window.removeEventListener('focusout', onFocusOut)
+        window.removeEventListener('keydown', this.onKeyDown)
+        window.removeEventListener('focusout', this.onFocusOut)
       })
+    })
+  }
+
+  open() {
+    // must mount before setting to open
+    // causes data-state to go from closed -> open, allowing CSS transition styling
+    this.isOverlayMounted.set(true)
+    requestAnimationFrame(() => {
+      this.isOpen.set(true)
+    })
+
+    window.addEventListener('keydown', this.onKeyDown)
+    window.addEventListener('focusout', this.onFocusOut)
+  }
+
+  async close() {
+    this.isOpen.set(false)
+    this.focusedItem.set(undefined)
+
+    window.removeEventListener('keydown', this.onKeyDown)
+    window.removeEventListener('focusout', this.onFocusOut)
+
+    // rAF forces us to wait until the rerender after setting isOpen to false,
+    // so animations are allowed to start before checking for animations
+    requestAnimationFrame(async () => {
+      // wait for animations to complete before unmounting the overlay
+      const animationPromises =
+        this.overlayElement()
+          ?.nativeElement.getAnimations()
+          .map((a) => a.finished) ?? []
+
+      await Promise.all(animationPromises)
+
+      this.isOverlayMounted.set(false)
     })
   }
 
@@ -69,7 +96,7 @@ export class SelectService {
     if (!this.focusedItem()) return
 
     this.value.set(this.focusedItem()!.value())
-    this.isOpen.set(false)
+    this.close()
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -103,12 +130,13 @@ export class SelectService {
     }
   }
 
+  // Will not fire when clicking on the select trigger if it's already focused
+  // Trigger handles closing on click
   private onFocusOut(e: FocusEvent) {
     const overlay = this.overlayElement()?.nativeElement
-    const trigger = this.triggerElement()?.nativeElement
     const target = e.relatedTarget as Node | null
-    if (!overlay?.contains(target) && !trigger?.contains(target)) {
-      this.isOpen.set(false)
+    if (!overlay?.contains(target)) {
+      this.close()
     }
   }
 }

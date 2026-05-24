@@ -1,7 +1,8 @@
-@if (selectService.isOpen()) {
+@if (selectService.isOverlayMounted()) {
   <div
     #overlayElement
     data-select-overlay
+    [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
   >

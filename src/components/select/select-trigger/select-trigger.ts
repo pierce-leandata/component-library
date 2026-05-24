@@ -22,14 +22,16 @@ export class SelectTriggerDirective {
   }
 
   protected onClick() {
-    if (!this.selectService.isOpen()) {
-      this.selectService.isOpen.set(true)
+    if (this.selectService.isOpen()) {
+      this.selectService.close()
+    } else {
+      this.selectService.open()
     }
   }
 
   protected onKeyDown(e: KeyboardEvent) {
     if (e.key === 'ArrowDown' && !this.selectService.isOpen()) {
-      this.selectService.isOpen.set(true)
+      this.selectService.open()
       // rAF so that the items have been rendered and can be accessed
       requestAnimationFrame(() => {
         this.selectService.focusedItem.set(this.selectService.items().at(0))

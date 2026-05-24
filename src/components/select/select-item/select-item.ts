@@ -16,7 +16,7 @@ export class SelectItemComponent {
   readonly label = viewChild<ElementRef<HTMLElement>>('label')
 
   onSelect() {
-    this.selectService.isOpen.set(false)
+    this.selectService.close()
     this.selectService.value.set(this.value())
   }
 
