@@ -1,4 +1,4 @@
-import { effect, ElementRef, Injectable, Signal, signal } from '@angular/core'
+import { DestroyRef, ElementRef, inject, Injectable, Signal, signal } from '@angular/core'
 import { generateId } from '@utils/utils'
 
 export interface SelectItem {
@@ -8,6 +8,8 @@ export interface SelectItem {
 
 @Injectable()
 export class SelectService {
+  destroyRef = inject(DestroyRef)
+
   /** DO NOT SET DIRECTLY. Use `open()` and `close()` methods */
   isOpen = signal(false)
   isOverlayMounted = signal(false)
@@ -20,11 +22,9 @@ export class SelectService {
   readonly overlayId = generateId()
 
   constructor() {
-    effect((onCleanup) => {
-      onCleanup(() => {
-        window.removeEventListener('keydown', this.onKeyDown)
-        window.removeEventListener('focusout', this.onFocusOut)
-      })
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('keydown', this.onKeyDown)
+      window.removeEventListener('focusout', this.onFocusOut)
     })
   }
 
