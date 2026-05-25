@@ -44,13 +44,6 @@ export class SelectService {
     },
   })
 
-  overlayRect = trackBoundingRect(this.overlayElement, {
-    listenTo: {
-      width: true,
-      height: true,
-    },
-  })
-
   wrapperRect = trackBoundingRect(this.wrapperElement, {
     listenTo: {
       x: true,
@@ -139,7 +132,7 @@ export class SelectService {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
-    if (!['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
+    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape'].includes(e.key)) {
       return
     }
 
@@ -165,6 +158,10 @@ export class SelectService {
           e.preventDefault()
           this.selectFocusedItem()
         }
+        break
+      }
+      case 'Escape': {
+        this.close()
       }
     }
   }
