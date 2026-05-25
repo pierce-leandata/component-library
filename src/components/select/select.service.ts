@@ -7,6 +7,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core'
+import { trackBoundingRect } from '@utils/bounding-rect'
 import { generateId } from '@utils/utils'
 
 export interface SelectItem {
@@ -18,14 +19,36 @@ export interface SelectItem {
 export class SelectService {
   destroyRef = inject(DestroyRef)
 
+  // ---- forwarded from select props ---- //
+
   /** DO NOT SET DIRECTLY. Use `open()` and `close()` methods */
   isOpen = signal(false)
-  isOverlayMounted = signal(false)
   value = signal<string | undefined>(undefined)
+  appendToBody: Signal<boolean> = signal<boolean>(false)
+
+  // ------------------------------------- //
+
+  isOverlayMounted = signal(false)
   items: WritableSignal<readonly SelectItem[]> = signal([])
   focusedItem = signal<SelectItem | undefined>(undefined)
   overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
   triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
+
+  triggerRect = trackBoundingRect(this.triggerElement, {
+    listenTo: {
+      width: true,
+      height: true,
+      x: true,
+      y: true,
+    },
+  })
+
+  overlayRect = trackBoundingRect(this.overlayElement, {
+    listenTo: {
+      width: true,
+      height: true,
+    },
+  })
 
   readonly overlayId = generateId()
 

@@ -1,5 +1,5 @@
 <main>
-  <pm-select>
+  <pm-select [appendToBody]="true">
     <button pmSelectTrigger>
       <pm-select-value> Placeholder </pm-select-value>
     </button>
@@ -10,5 +10,14 @@
     </pm-select-overlay>
   </pm-select>
 
-  <button>Some other button</button>
+  <pm-select [appendToBody]="false">
+    <button pmSelectTrigger>
+      <pm-select-value> Placeholder </pm-select-value>
+    </button>
+    <pm-select-overlay>
+      <pm-select-item value="option1">First</pm-select-item>
+      <pm-select-item value="option2">Option 2</pm-select-item>
+      <pm-select-item value="option3">The Third Option</pm-select-item>
+    </pm-select-overlay>
+  </pm-select>
 </main>

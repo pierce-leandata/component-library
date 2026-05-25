@@ -2,7 +2,9 @@
   <div
     #overlayElement
     data-select-overlay
+    [attr.data-select-overlay-appended-to-body]="selectService.appendToBody()"
     [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
+    [style]="positioning()"
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
   >

@@ -1,3 +1,6 @@
-<div data-select [style]="{ '--pm-select-trigger-width': `${triggerRect()?.width}px` }">
+<div
+  data-select
+  [style]="{ '--pm-select-trigger-width': `${selectService.triggerRect()?.width}px` }"
+>
   <ng-content />
 </div>
