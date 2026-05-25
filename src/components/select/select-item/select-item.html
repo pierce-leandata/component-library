@@ -1,7 +1,8 @@
 <li
   data-select-item
   role="option"
-  [class.focused]="isFocused()"
+  [attr.data-focused]="isFocused()"
+  [attr.data-selected]="isSelected()"
   [attr.aria-selected]="isSelected()"
   (click)="onSelect()"
   (keydown)="onKeyDown($event)"

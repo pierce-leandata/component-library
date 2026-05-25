@@ -4,6 +4,7 @@ import { SelectComponent } from '@components/select/select/select'
 import { SelectTriggerDirective } from '@components/select/select-trigger/select-trigger'
 import { SelectItemComponent } from '@components/select/select-item/select-item'
 import { SelectValueComponent } from '@components/select/select-value/select-value'
+import { SelectTriggerIconDirective } from '@components/select/select-trigger-icon/select-trigger-icon'
 
 @Component({
   selector: 'pm-app-root',
@@ -11,6 +12,7 @@ import { SelectValueComponent } from '@components/select/select-value/select-val
     SelectComponent,
     SelectOverlayComponent,
     SelectTriggerDirective,
+    SelectTriggerIconDirective,
     SelectItemComponent,
     SelectValueComponent,
   ],

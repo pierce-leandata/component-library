@@ -4,3 +4,19 @@ main {
   display: flex;
   gap: 40px;
 }
+
+::ng-deep {
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ball {
+    background: red;
+    width: 1em;
+    height: 1em;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+}
