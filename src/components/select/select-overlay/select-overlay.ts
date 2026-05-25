@@ -19,23 +19,30 @@ import { trackOffsetSize } from '@utils/sizing'
 })
 export class SelectOverlayComponent {
   /**
-   * How to align the overlay relative to the trigger
+   * How to align the overlay relative to the trigger.
    * The overlay will be kept within the bounds of the window if the chosen alignment
-   * would cause the overlay to go off-screen
+   * would cause the overlay to go off-screen.
    *
    * @default 'center'
    */
   align = input<'start' | 'center' | 'end'>('center')
   /**
-   * Which side of the trigger to place the overlay
+   * Which side of the trigger to place the overlay.
    * If there is no room on the chosen side of the overlay and the opposite side has
-   * more space, the opposite side will be used
+   * more space, the opposite side will be used.
    *
    * @default 'bottom'
    */
   side = input<'top' | 'bottom'>('bottom')
   /**
+   * Additional space between trigger and the overlay.
+   *
+   * @default 0
+   */
+  sideOffset = input(0)
+  /**
    * What element to use as the bounds of the overlay.
+   * The overlay will still be kept on-screen when possible.
    *
    * @default <html>
    */
@@ -92,9 +99,9 @@ export class SelectOverlayComponent {
 
     const getTopOffset = (side: 'top' | 'bottom') => {
       if (side === 'top') {
-        return triggerTopOffset - overlayHeight
+        return triggerTopOffset - overlayHeight - this.sideOffset()
       } else {
-        return triggerTopOffset + triggerHeight
+        return triggerTopOffset + triggerHeight + this.sideOffset()
       }
     }
 
@@ -102,23 +109,6 @@ export class SelectOverlayComponent {
       const offsetToTry = getLeftOffset(align)
       const boundingElementWidth = boundingElement.offsetWidth
       const boundingElementLeft = boundingElement.offsetLeft
-
-      // originLeft?          originLeft?
-      // 0                    triggerLeft                            boundLeft + boundWidth
-      // |           |--------|=============================|--------|                 |
-      //             boundLeft         overlayWidth                                    windowWidth
-      //
-      // ABSOLUTE POSITIONING
-      // min offset = triggerLeft - boundLeft
-      // max offset = boundLeft + boundWidth - triggerLeft - overlayWidth
-      //
-      // FIXED POSITIONING
-      // min offset = boundLeft
-      // max offset = boundLeft + boundWidth - overlayWidth
-      //
-      // BOTH
-      // min offset = boundLeft - triggerLeftOffset
-      // max offset = boundLeft + boundWidth - overlayWidth - (triggerLeftOffset)
 
       return Math.min(
         boundingElementLeft + boundingElementWidth - overlayWidth - originLeft,
@@ -129,11 +119,13 @@ export class SelectOverlayComponent {
     const getTopOffsetWithinBounds = () => {
       const offsetToTry = getTopOffset(side)
 
-      const boundingElementHeight = boundingElement.clientHeight
-      const boundingElementTop = boundingElement.offsetTop
+      const boundingElementRect = boundingElement.getBoundingClientRect()
+      const boundingElementHeight = boundingElementRect.height
+      const boundingElementTop = boundingElementRect.top
 
-      const isAboveBounds = offsetToTry + originTop < boundingElementTop
-      const isBelowBounds = offsetToTry + originTop + overlayHeight > boundingElementHeight
+      const isAboveBounds = originTop + offsetToTry < boundingElementTop
+      const isBelowBounds =
+        originTop + offsetToTry + overlayHeight > boundingElementHeight + boundingElementTop
       const spaceAboveTrigger = triggerRect.top - boundingElementTop
       const spaceBelowTrigger = boundingElementTop + boundingElementHeight - triggerRect.bottom
 

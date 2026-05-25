@@ -31,6 +31,8 @@ export class App {
   protected translateX = signal(0)
   protected translateY = signal(0)
 
+  protected sideOffset = signal(0)
+
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
   )

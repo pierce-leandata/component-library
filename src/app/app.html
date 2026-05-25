@@ -38,9 +38,9 @@
         <span>Translate X ({{ translateX() }}px)</span>
         <input
           type="range"
-          min="-500"
-          max="500"
-          step="50"
+          min="-100"
+          max="100"
+          step="5"
           [value]="translateX()"
           (input)="translateX.set(+$any($event.target).value)"
         />
@@ -49,11 +49,26 @@
         <span>Translate Y ({{ translateY() }}px)</span>
         <input
           type="range"
-          min="-500"
-          max="500"
-          step="50"
+          min="-100"
+          max="100"
+          step="5"
           [value]="translateY()"
           (input)="translateY.set(+$any($event.target).value)"
+        />
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Side offset</legend>
+      <label>
+        <span>Side offset ({{ sideOffset() }}px)</span>
+        <input
+          type="range"
+          min="-50"
+          max="50"
+          step="5"
+          [value]="sideOffset()"
+          (input)="sideOffset.set(+$any($event.target).value)"
         />
       </label>
     </fieldset>
@@ -74,7 +89,12 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay [boundingElement]="bounds" [align]="align()" [side]="side()">
+      <pm-select-overlay
+        [boundingElement]="bounds"
+        [align]="align()"
+        [side]="side()"
+        [sideOffset]="sideOffset()"
+      >
         <pm-select-item value="option1">First</pm-select-item>
         <pm-select-item value="option2">Option 2</pm-select-item>
         <pm-select-item value="option3">The Third Option</pm-select-item>
@@ -95,7 +115,12 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay [boundingElement]="bounds" [align]="align()" [side]="side()">
+      <pm-select-overlay
+        [boundingElement]="bounds"
+        [align]="align()"
+        [side]="side()"
+        [sideOffset]="sideOffset()"
+      >
         <pm-select-item value="option1"
           ><div class="container">
             <div class="ball"></div>
