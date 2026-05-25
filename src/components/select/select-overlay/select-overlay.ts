@@ -34,6 +34,12 @@ export class SelectOverlayComponent {
    * @default 'bottom'
    */
   side = input<'top' | 'bottom'>('bottom')
+  /**
+   * What element to use as the bounds of the overlay.
+   *
+   * @default <html>
+   */
+  boundingElement = input<HTMLElement>()
 
   protected selectService = inject(SelectService)
 
@@ -72,6 +78,7 @@ export class SelectOverlayComponent {
     const triggerHeight = triggerRect.height
     const overlayWidth = overlaySize?.width ?? 0
     const overlayHeight = overlaySize?.height ?? 0
+    const boundingElement = this.boundingElement() ?? document.documentElement
 
     const getLeftOffset = (align: 'start' | 'center' | 'end') => {
       if (align === 'start') {
@@ -91,38 +98,56 @@ export class SelectOverlayComponent {
       }
     }
 
-    const getLeftOffsetWithinWindow = () => {
+    const getLeftOffsetWithinBounds = () => {
       const offsetToTry = getLeftOffset(align)
-      const availableWidth = document.documentElement.clientWidth
+      const boundingElementWidth = boundingElement.offsetWidth
+      const boundingElementLeft = boundingElement.offsetLeft
+
+      // originLeft?          originLeft?
+      // 0                    triggerLeft                            boundLeft + boundWidth
+      // |           |--------|=============================|--------|                 |
+      //             boundLeft         overlayWidth                                    windowWidth
+      //
+      // ABSOLUTE POSITIONING
+      // min offset = triggerLeft - boundLeft
+      // max offset = boundLeft + boundWidth - triggerLeft - overlayWidth
+      //
+      // FIXED POSITIONING
+      // min offset = boundLeft
+      // max offset = boundLeft + boundWidth - overlayWidth
+      //
+      // BOTH
+      // min offset = boundLeft - triggerLeftOffset
+      // max offset = boundLeft + boundWidth - overlayWidth - (triggerLeftOffset)
 
       return Math.min(
-        availableWidth - originLeft - overlayWidth,
-        Math.max(-1 * originLeft, offsetToTry),
+        boundingElementLeft + boundingElementWidth - overlayWidth - originLeft,
+        Math.max(boundingElementLeft - originLeft, offsetToTry),
       )
     }
 
-    const getTopOffsetWithinWindow = () => {
+    const getTopOffsetWithinBounds = () => {
       const offsetToTry = getTopOffset(side)
 
-      const availableHeight = document.documentElement.clientHeight
-      const isAboveWindow = offsetToTry + originTop < 0
-      const isBelowWindow = offsetToTry + originTop + overlayHeight > availableHeight
-      const spaceAboveTrigger = triggerRect.top
-      const spaceBelowTrigger = availableHeight - triggerRect.bottom
+      const boundingElementHeight = boundingElement.clientHeight
+      const boundingElementTop = boundingElement.offsetTop
 
-      console.log(spaceAboveTrigger, spaceBelowTrigger)
+      const isAboveBounds = offsetToTry + originTop < boundingElementTop
+      const isBelowBounds = offsetToTry + originTop + overlayHeight > boundingElementHeight
+      const spaceAboveTrigger = triggerRect.top - boundingElementTop
+      const spaceBelowTrigger = boundingElementTop + boundingElementHeight - triggerRect.bottom
 
-      if (side === 'top' && isAboveWindow && spaceBelowTrigger > spaceAboveTrigger)
+      if (side === 'top' && isAboveBounds && spaceBelowTrigger > spaceAboveTrigger)
         return getTopOffset('bottom')
-      if (side === 'bottom' && isBelowWindow && spaceAboveTrigger > spaceBelowTrigger)
+      if (side === 'bottom' && isBelowBounds && spaceAboveTrigger > spaceBelowTrigger)
         return getTopOffset('top')
 
       return offsetToTry
     }
 
     return {
-      left: `${getLeftOffsetWithinWindow()}px`,
-      top: `${getTopOffsetWithinWindow()}px`,
+      left: `${getLeftOffsetWithinBounds()}px`,
+      top: `${getTopOffsetWithinBounds()}px`,
     }
   })
 
