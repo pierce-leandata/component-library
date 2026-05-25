@@ -18,7 +18,16 @@ import { trackOffsetSize } from '@utils/sizing'
   styleUrl: './select-overlay.scss',
 })
 export class SelectOverlayComponent {
+  /**
+   * How to align the overlay relative to the trigger
+   * The overlay will be kept within the bounds of the window if the chosen alignment
+   * would cause the overlay to go off-screen
+   */
   align = input<'start' | 'center' | 'end'>('center')
+  /**
+   * Which side of the trigger to place the overlay
+   * If there is no room on the chosen side of the overlay, the opposite side will be used
+   */
   side = input<'top' | 'bottom'>('bottom')
 
   protected selectService = inject(SelectService)
@@ -30,7 +39,7 @@ export class SelectOverlayComponent {
   // the positioning
   private overlaySize = trackOffsetSize(this.overlayElement)
 
-  positioning = computed<Record<string, string | undefined>>(() => {
+  positioning = computed<{ left: string; top: string }>(() => {
     // use the `getBoundingClientRect` reference of the trigger because we
     // want to attach to the trigger no matter how it got to where it is
     const triggerRect = this.selectService.triggerRect()
@@ -59,27 +68,50 @@ export class SelectOverlayComponent {
     const overlayWidth = overlaySize?.width ?? 0
     const overlayHeight = overlaySize?.height ?? 0
 
-    const getX = () => {
+    const getLeftOffset = (align: 'start' | 'center' | 'end') => {
       if (align === 'start') {
-        return { left: `${triggerLeft}px` }
+        return triggerLeft
       } else if (align === 'center') {
-        return { left: `${triggerLeft + triggerWidth / 2 - overlayWidth / 2}px` }
+        return triggerLeft + triggerWidth / 2 - overlayWidth / 2
       } else {
-        return { left: `${triggerLeft + (triggerWidth - overlayWidth)}px` }
+        return triggerLeft + (triggerWidth - overlayWidth)
       }
     }
 
-    const getY = () => {
+    const getTopOffset = (side: 'top' | 'bottom') => {
       if (side === 'top') {
-        return { top: `${triggerTop - overlayHeight}px` }
+        return triggerTop - overlayHeight
       } else {
-        return { top: `${triggerTop + triggerHeight}px` }
+        return triggerTop + triggerHeight
       }
+    }
+
+    const getLeftOffsetWithinWindow = () => {
+      const offsetToTry = getLeftOffset(align)
+      const availableWidth = document.documentElement.clientWidth
+
+      return Math.min(
+        availableWidth - originLeft - overlayWidth,
+        Math.max(-1 * originLeft, offsetToTry),
+      )
+    }
+
+    const getTopOffsetWithinWindow = () => {
+      const offsetToTry = getTopOffset(side)
+
+      const availableHeight = document.documentElement.clientHeight
+      const isAboveWindow = offsetToTry + originTop < 0
+      const isBelowWindow = offsetToTry + originTop + overlayHeight > availableHeight
+
+      if (side === 'top' && isAboveWindow) return getTopOffset('bottom')
+      if (side === 'bottom' && isBelowWindow) return getTopOffset('top')
+
+      return offsetToTry
     }
 
     return {
-      ...getX(),
-      ...getY(),
+      left: `${getLeftOffsetWithinWindow()}px`,
+      top: `${getTopOffsetWithinWindow()}px`,
     }
   })
 

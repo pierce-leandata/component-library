@@ -38,9 +38,9 @@
         <span>Translate X ({{ translateX() }}px)</span>
         <input
           type="range"
-          min="-100"
-          max="100"
-          step="10"
+          min="-500"
+          max="500"
+          step="50"
           [value]="translateX()"
           (input)="translateX.set(+$any($event.target).value)"
         />
@@ -49,9 +49,9 @@
         <span>Translate Y ({{ translateY() }}px)</span>
         <input
           type="range"
-          min="-100"
-          max="100"
-          step="10"
+          min="-500"
+          max="500"
+          step="50"
           [value]="translateY()"
           (input)="translateY.set(+$any($event.target).value)"
         />
