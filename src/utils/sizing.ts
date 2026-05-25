@@ -2,6 +2,48 @@ import { effect, ElementRef, signal, Signal } from '@angular/core'
 
 type DOMRectWithoutToJSON = Omit<DOMRect, 'toJSON'>
 
+export interface OffsetSize {
+  width: number
+  height: number
+}
+
+/**
+ * Reactively track an element's `offsetWidth` and `offsetHeight`.
+ *
+ * These values ignore CSS transforms, making them suitable for positioning
+ * calculations that should not be affected by transitions like `scale`.
+ *
+ * Updates are driven by `ResizeObserver`.
+ *
+ * @param element signal for an element ref
+ * @returns up-to-date offset size signal
+ */
+export function trackOffsetSize(
+  element: Signal<ElementRef<HTMLElement> | undefined>,
+): Signal<OffsetSize | null> {
+  const size = signal<OffsetSize | null>(null)
+
+  effect((onCleanup) => {
+    const el = element()?.nativeElement
+    if (!el) {
+      return
+    }
+
+    const update = () => {
+      size.set({ width: el.offsetWidth, height: el.offsetHeight })
+    }
+
+    update()
+
+    const observer = new ResizeObserver(update)
+    observer.observe(el)
+
+    onCleanup(() => observer.disconnect())
+  })
+
+  return size.asReadonly()
+}
+
 /**
  * Get an up-to-date reference to the DOMRect of an element, listening
  * only to changes in properties you specify.

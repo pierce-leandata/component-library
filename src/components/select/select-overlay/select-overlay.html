@@ -4,6 +4,8 @@
     data-select-overlay
     [attr.data-select-overlay-appended-to-body]="selectService.appendToBody()"
     [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
+    [attr.data-align]="align()"
+    [attr.data-side]="side()"
     [style]="positioning()"
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"

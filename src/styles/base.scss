@@ -13,7 +13,6 @@ body {
   transition:
     opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     scale 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transform-origin: top center;
 
   &[data-state='open'] {
     opacity: 1;

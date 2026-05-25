@@ -7,7 +7,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core'
-import { trackBoundingRect } from '@utils/bounding-rect'
+import { trackBoundingRect } from '@utils/sizing'
 import { generateId } from '@utils/utils'
 
 export interface SelectItem {

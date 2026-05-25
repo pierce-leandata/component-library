@@ -1,9 +1,69 @@
 <main>
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <fieldset>
+      <legend>Align</legend>
+      @for (option of alignOptions; track option) {
+        <label>
+          <input
+            type="radio"
+            name="align"
+            [value]="option"
+            [checked]="align() === option"
+            (change)="align.set(option)"
+          />
+          {{ option }}
+        </label>
+      }
+    </fieldset>
+
+    <fieldset>
+      <legend>Side</legend>
+      @for (option of sideOptions; track option) {
+        <label>
+          <input
+            type="radio"
+            name="side"
+            [value]="option"
+            [checked]="side() === option"
+            (change)="side.set(option)"
+          />
+          {{ option }}
+        </label>
+      }
+    </fieldset>
+
+    <fieldset>
+      <legend>Trigger transform</legend>
+      <label>
+        <span>Translate X ({{ translateX() }}px)</span>
+        <input
+          type="range"
+          min="-100"
+          max="100"
+          step="10"
+          [value]="translateX()"
+          (input)="translateX.set(+$any($event.target).value)"
+        />
+      </label>
+      <label>
+        <span>Translate Y ({{ translateY() }}px)</span>
+        <input
+          type="range"
+          min="-100"
+          max="100"
+          step="10"
+          [value]="translateY()"
+          (input)="translateY.set(+$any($event.target).value)"
+        />
+      </label>
+    </fieldset>
+  </div>
+
   <pm-select [appendToBody]="true">
-    <button pmSelectTrigger>
+    <button pmSelectTrigger [style.transform]="triggerTransform()">
       <pm-select-value> Placeholder </pm-select-value>
     </button>
-    <pm-select-overlay>
+    <pm-select-overlay [align]="align()" [side]="side()">
       <pm-select-item value="option1">First</pm-select-item>
       <pm-select-item value="option2">Option 2</pm-select-item>
       <pm-select-item value="option3">The Third Option</pm-select-item>
@@ -11,10 +71,10 @@
   </pm-select>
 
   <pm-select [appendToBody]="false">
-    <button pmSelectTrigger>
+    <button pmSelectTrigger [style.transform]="triggerTransform()">
       <pm-select-value> Placeholder </pm-select-value>
     </button>
-    <pm-select-overlay>
+    <pm-select-overlay [align]="align()" [side]="side()">
       <pm-select-item value="option1">First</pm-select-item>
       <pm-select-item value="option2">Option 2</pm-select-item>
       <pm-select-item value="option3">The Third Option</pm-select-item>
