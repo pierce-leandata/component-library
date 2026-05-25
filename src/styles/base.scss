@@ -11,14 +11,18 @@ body {
     opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     scale 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
 
+  // default closed styles placed only in &[data-state='closed'] has a bug
+  // Angular seems to briefly render w/o any `data-state` before changing
+  // to `closed` when not appended to the body. this means you will see
+  // default state -> closed state -> open state. by making
+  // default state == closed state, it simplifies to closed state -> open
+  // state
+  opacity: 0;
+  scale: 0.9;
+
   &[data-state='open'] {
     opacity: 1;
     scale: 1;
-  }
-
-  &[data-state='closed'] {
-    opacity: 0;
-    scale: 0.9;
   }
 
   &[data-align='start'][data-side='top'] {
