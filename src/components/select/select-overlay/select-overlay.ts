@@ -34,6 +34,7 @@ export class SelectOverlayComponent {
     // use the `getBoundingClientRect` reference of the trigger because we
     // want to attach to the trigger no matter how it got to where it is
     const triggerRect = this.selectService.triggerRect()
+    const wrapperRect = this.selectService.wrapperRect()
     const overlaySize = this.overlaySize()
     const appendToBody = this.selectService.appendToBody()
     const align = this.align()
@@ -46,46 +47,33 @@ export class SelectOverlayComponent {
       }
     }
 
+    // origin for the positioning = viewport when appended to body,
+    // wrapper otherwise. subtracting the wrapper's rect makes the
+    // calculations transform-aware since both rects are post-transform.
+    const originLeft = appendToBody ? 0 : (wrapperRect?.left ?? 0)
+    const originTop = appendToBody ? 0 : (wrapperRect?.top ?? 0)
+    const triggerLeft = triggerRect.left - originLeft
+    const triggerTop = triggerRect.top - originTop
+    const triggerWidth = triggerRect.width
+    const triggerHeight = triggerRect.height
+    const overlayWidth = overlaySize?.width ?? 0
+    const overlayHeight = overlaySize?.height ?? 0
+
     const getX = () => {
-      const overlayWidth = overlaySize?.width ?? 0
-      const triggerWidth = triggerRect?.width ?? 0
-      if (appendToBody) {
-        const triggerLeft = triggerRect?.left ?? 0
-        if (align === 'start') {
-          return { left: `${triggerLeft}px` }
-        } else if (align === 'center') {
-          return { left: `${triggerLeft + triggerWidth / 2 - overlayWidth / 2}px` }
-        } else {
-          return { left: `${triggerLeft + (triggerWidth - overlayWidth)}px` }
-        }
+      if (align === 'start') {
+        return { left: `${triggerLeft}px` }
+      } else if (align === 'center') {
+        return { left: `${triggerLeft + triggerWidth / 2 - overlayWidth / 2}px` }
       } else {
-        if (align === 'start') {
-          return { left: '0px' }
-        } else if (align === 'center') {
-          return { left: `${triggerWidth / 2 - overlayWidth / 2}px` }
-        } else {
-          return { right: '0px' }
-        }
+        return { left: `${triggerLeft + (triggerWidth - overlayWidth)}px` }
       }
     }
 
     const getY = () => {
-      if (appendToBody) {
-        const triggerTop = triggerRect?.top ?? 0
-        const triggerHeight = triggerRect?.height ?? 0
-        const overlayHeight = overlaySize?.height ?? 0
-
-        if (side === 'top') {
-          return { top: `${triggerTop - overlayHeight}px` }
-        } else {
-          return { top: `${triggerTop + triggerHeight}px` }
-        }
+      if (side === 'top') {
+        return { top: `${triggerTop - overlayHeight}px` }
       } else {
-        if (side === 'top') {
-          return { bottom: '100%' }
-        } else {
-          return { top: '100%' }
-        }
+        return { top: `${triggerTop + triggerHeight}px` }
       }
     }
 

@@ -1,4 +1,4 @@
-import { Component, inject, input, model } from '@angular/core'
+import { Component, effect, ElementRef, inject, input, model, viewChild } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
 
 @Component({
@@ -14,9 +14,13 @@ export class SelectComponent {
 
   selectService = inject(SelectService)
 
+  private wrapperElement = viewChild<ElementRef<HTMLElement>>('wrapper')
+
   constructor() {
     this.selectService.isOpen = this.isOpen
     this.selectService.value = this.value
     this.selectService.appendToBody = this.appendToBody
+
+    effect(() => this.selectService.wrapperElement.set(this.wrapperElement()))
   }
 }

@@ -33,6 +33,7 @@ export class SelectService {
   focusedItem = signal<SelectItem | undefined>(undefined)
   overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
   triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
+  wrapperElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
 
   triggerRect = trackBoundingRect(this.triggerElement, {
     listenTo: {
@@ -47,6 +48,13 @@ export class SelectService {
     listenTo: {
       width: true,
       height: true,
+    },
+  })
+
+  wrapperRect = trackBoundingRect(this.wrapperElement, {
+    listenTo: {
+      x: true,
+      y: true,
     },
   })
 
