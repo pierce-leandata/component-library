@@ -22,11 +22,16 @@ export class SelectOverlayComponent {
    * How to align the overlay relative to the trigger
    * The overlay will be kept within the bounds of the window if the chosen alignment
    * would cause the overlay to go off-screen
+   *
+   * @default 'center'
    */
   align = input<'start' | 'center' | 'end'>('center')
   /**
    * Which side of the trigger to place the overlay
-   * If there is no room on the chosen side of the overlay, the opposite side will be used
+   * If there is no room on the chosen side of the overlay and the opposite side has
+   * more space, the opposite side will be used
+   *
+   * @default 'bottom'
    */
   side = input<'top' | 'bottom'>('bottom')
 
@@ -61,8 +66,8 @@ export class SelectOverlayComponent {
     // calculations transform-aware since both rects are post-transform.
     const originLeft = appendToBody ? 0 : (wrapperRect?.left ?? 0)
     const originTop = appendToBody ? 0 : (wrapperRect?.top ?? 0)
-    const triggerLeft = triggerRect.left - originLeft
-    const triggerTop = triggerRect.top - originTop
+    const triggerLeftOffset = triggerRect.left - originLeft
+    const triggerTopOffset = triggerRect.top - originTop
     const triggerWidth = triggerRect.width
     const triggerHeight = triggerRect.height
     const overlayWidth = overlaySize?.width ?? 0
@@ -70,19 +75,19 @@ export class SelectOverlayComponent {
 
     const getLeftOffset = (align: 'start' | 'center' | 'end') => {
       if (align === 'start') {
-        return triggerLeft
+        return triggerLeftOffset
       } else if (align === 'center') {
-        return triggerLeft + triggerWidth / 2 - overlayWidth / 2
+        return triggerLeftOffset + triggerWidth / 2 - overlayWidth / 2
       } else {
-        return triggerLeft + (triggerWidth - overlayWidth)
+        return triggerLeftOffset + (triggerWidth - overlayWidth)
       }
     }
 
     const getTopOffset = (side: 'top' | 'bottom') => {
       if (side === 'top') {
-        return triggerTop - overlayHeight
+        return triggerTopOffset - overlayHeight
       } else {
-        return triggerTop + triggerHeight
+        return triggerTopOffset + triggerHeight
       }
     }
 
@@ -102,9 +107,15 @@ export class SelectOverlayComponent {
       const availableHeight = document.documentElement.clientHeight
       const isAboveWindow = offsetToTry + originTop < 0
       const isBelowWindow = offsetToTry + originTop + overlayHeight > availableHeight
+      const spaceAboveTrigger = triggerRect.top
+      const spaceBelowTrigger = availableHeight - triggerRect.bottom
 
-      if (side === 'top' && isAboveWindow) return getTopOffset('bottom')
-      if (side === 'bottom' && isBelowWindow) return getTopOffset('top')
+      console.log(spaceAboveTrigger, spaceBelowTrigger)
+
+      if (side === 'top' && isAboveWindow && spaceBelowTrigger > spaceAboveTrigger)
+        return getTopOffset('bottom')
+      if (side === 'bottom' && isBelowWindow && spaceAboveTrigger > spaceBelowTrigger)
+        return getTopOffset('top')
 
       return offsetToTry
     }
