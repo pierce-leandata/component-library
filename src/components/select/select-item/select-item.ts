@@ -32,7 +32,15 @@ export class SelectItemComponent {
     }
   }
 
-  onMouseEnter() {
+  // prefer listening to mousemove events instead of mouseenter
+  // mouseenter can cause extraneous focuses
+  //
+  // i.e. searching while mouse is hovered over the overlay:
+  // the mouse "enters" a different select item than the one you focused by typing,
+  // causing it to focus, which is a confusing experience
+  onMouseMove() {
+    if (this.selectService.focusedItem()?.value() === this.value()) return
+
     this.selectService.focusItem({
       value: this.value,
       label: this.label,
