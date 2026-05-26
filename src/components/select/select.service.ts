@@ -175,7 +175,12 @@ export class SelectService {
       }
       case 'ArrowUp': {
         e.preventDefault()
-        this.focusPreviousItem()
+        if (e.altKey) {
+          this.selectFocusedItem()
+          this.triggerElement()?.nativeElement.focus()
+        } else {
+          this.focusPreviousItem()
+        }
         break
       }
       case 'Enter':
