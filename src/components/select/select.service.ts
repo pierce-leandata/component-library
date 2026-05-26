@@ -73,7 +73,7 @@ export class SelectService {
     this.isOverlayMounted.set(true)
 
     requestAnimationFrame(() => {
-      const selectedItemIndex = this.items().findIndex((item) => item.value() === this.value())
+      const selectedItemIndex = this.getSelectedItemIndex()
       const itemToFocus = options?.focusItem ?? Math.max(0, selectedItemIndex)
       this.focusItem(itemToFocus, { scrollIntoViewBlock: 'center' })
       this.isOpen.set(true)
@@ -125,6 +125,10 @@ export class SelectService {
     }
   }
 
+  private getSelectedItemIndex() {
+    return this.items().findIndex((item) => item.value() === this.value())
+  }
+
   private getFocusedItemIndex() {
     return this.items().findIndex((item) => item.value() === this.focusedItem()?.value())
   }
@@ -163,7 +167,20 @@ export class SelectService {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
-    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Tab', 'Escape', 'Home', 'End'].includes(e.key)) {
+    if (
+      ![
+        'ArrowDown',
+        'ArrowUp',
+        'Enter',
+        ' ',
+        'Tab',
+        'Escape',
+        'Home',
+        'End',
+        'PageUp',
+        'PageDown',
+      ].includes(e.key)
+    ) {
       return
     }
 
@@ -207,6 +224,21 @@ export class SelectService {
       case 'End': {
         e.preventDefault()
         this.focusItem(-1, { scrollIntoViewBlock: 'nearest' })
+        break
+      }
+      case 'PageUp': {
+        e.preventDefault()
+        const focusedItemIndex = this.getFocusedItemIndex()
+        this.focusItem(Math.max(0, focusedItemIndex - 10), { scrollIntoViewBlock: 'nearest' })
+        break
+      }
+      case 'PageDown': {
+        e.preventDefault()
+        const focusedItemIndex = this.getFocusedItemIndex()
+        console.log(focusedItemIndex)
+        this.focusItem(Math.min(this.items().length - 1, focusedItemIndex + 10), {
+          scrollIntoViewBlock: 'nearest',
+        })
         break
       }
     }
