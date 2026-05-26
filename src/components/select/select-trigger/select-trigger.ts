@@ -31,8 +31,27 @@ export class SelectTriggerDirective {
   }
 
   protected onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'ArrowDown' && !this.selectService.isOpen()) {
-      this.selectService.open()
+    // SelectService handles keyboard navigation when the overlay is open
+    if (this.selectService.isOpen()) {
+      return
+    }
+
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) {
+      return
+    }
+
+    e.preventDefault()
+
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'ArrowUp':
+        this.selectService.open()
+        break
+      case 'Home':
+        this.selectService.open({ focusItem: 0 })
+        break
+      case 'End':
+        this.selectService.open({ focusItem: -1 })
     }
   }
 }

@@ -61,14 +61,21 @@ export class SelectService {
     })
   }
 
-  open() {
+  open(options?: {
+    /**
+     * Index of the item to focus. If omitted, the currently selected item will be focused.
+     * If no item is currently selected, the first item will be focused.
+     */
+    focusItem?: number
+  }) {
     // must mount before setting to open
     // causes data-state to go from closed -> open, allowing CSS transition styling
     this.isOverlayMounted.set(true)
 
     requestAnimationFrame(() => {
       const selectedItemIndex = this.items().findIndex((item) => item.value() === this.value())
-      this.focusItem(Math.max(0, selectedItemIndex), { scrollIntoViewBlock: 'center' })
+      const itemToFocus = options?.focusItem ?? Math.max(0, selectedItemIndex)
+      this.focusItem(itemToFocus, { scrollIntoViewBlock: 'center' })
       this.isOpen.set(true)
     })
 
@@ -156,36 +163,39 @@ export class SelectService {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
-    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape'].includes(e.key)) {
+    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape', 'Home', 'End'].includes(e.key)) {
       return
     }
 
-    const items = this.items()
-    if (items.length === 0) {
-      return
-    }
+    e.preventDefault()
 
     switch (e.key) {
       case 'ArrowDown': {
-        e.preventDefault()
         this.focusNextItem()
         break
       }
       case 'ArrowUp': {
-        e.preventDefault()
         this.focusPreviousItem()
         break
       }
       case 'Enter':
       case ' ': {
         if (this.focusedItem()) {
-          e.preventDefault()
           this.selectFocusedItem()
         }
         break
       }
       case 'Escape': {
         this.close()
+        break
+      }
+      case 'Home': {
+        this.focusItem(0, { scrollIntoViewBlock: 'nearest' })
+        break
+      }
+      case 'End': {
+        this.focusItem(-1, { scrollIntoViewBlock: 'nearest' })
+        break
       }
     }
   }
