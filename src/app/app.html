@@ -114,6 +114,13 @@
         @for (option of options; track option.value) {
           <pm-select-item [value]="option.value">{{ option.label }}</pm-select-item>
         }
+        <pm-select-item value="test">
+          Test
+          <div>
+            Nested
+            <div class="after">Double Nest</div>
+          </div>
+        </pm-select-item>
       </pm-select-overlay>
     </pm-select>
   </div>

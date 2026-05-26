@@ -1,6 +1,6 @@
 import { Component, computed, ElementRef, inject, input, viewChild } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
-import { generateId } from '@utils/utils'
+import { extractTextFromHtml, generateId } from '@utils/utils'
 
 @Component({
   selector: 'pm-select-item',
@@ -13,6 +13,9 @@ export class SelectItemComponent {
 
   protected isSelected = computed(() => this.selectService.value() === this.value())
   protected isFocused = computed(() => this.selectService.focusedItem()?.value() === this.value())
+  readonly searchValue = computed(() =>
+    this.label() ? extractTextFromHtml(this.label()!.nativeElement) : '',
+  )
 
   readonly label = viewChild<ElementRef<HTMLElement>>('label')
 
@@ -30,6 +33,10 @@ export class SelectItemComponent {
   }
 
   onMouseEnter() {
-    this.selectService.focusItem({ value: this.value, label: this.label })
+    this.selectService.focusItem({
+      value: this.value,
+      label: this.label,
+      searchValue: this.searchValue,
+    })
   }
 }

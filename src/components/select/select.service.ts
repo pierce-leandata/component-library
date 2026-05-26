@@ -13,7 +13,10 @@ import { generateId } from '@utils/utils'
 export interface SelectItem {
   value: Signal<string>
   label: Signal<ElementRef<HTMLElement> | undefined>
+  searchValue: Signal<string>
 }
+
+const SEARCH_CLEAR_DELAY = 1000 as const
 
 @Injectable()
 export class SelectService {
@@ -36,7 +39,7 @@ export class SelectService {
   triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
   wrapperElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
 
-  triggerRect = trackBoundingRect(this.triggerElement, {
+  readonly triggerRect = trackBoundingRect(this.triggerElement, {
     listenTo: {
       width: true,
       height: true,
@@ -45,7 +48,7 @@ export class SelectService {
     },
   })
 
-  wrapperRect = trackBoundingRect(this.wrapperElement, {
+  readonly wrapperRect = trackBoundingRect(this.wrapperElement, {
     listenTo: {
       x: true,
       y: true,
@@ -54,8 +57,14 @@ export class SelectService {
 
   readonly overlayId = generateId()
 
+  private searchString = ''
+  private lastSearchTimestamp = 0
+  private isCyclingSearch = false
+  private isSearchResetCancelled = false
+
   constructor() {
     this.destroyRef.onDestroy(() => {
+      this.isSearchResetCancelled = true
       window.removeEventListener('keydown', this.onKeyDown)
       window.removeEventListener('focusout', this.onFocusOut)
     })
@@ -67,15 +76,25 @@ export class SelectService {
      * If no item is currently selected, the first item will be focused.
      */
     focusItem?: number
+    /**
+     * Whether to allow focusing on any item after opening.
+     *
+     * @default true
+     */
+    shouldFocus?: boolean
   }) {
     // must mount before setting to open
     // causes data-state to go from closed -> open, allowing CSS transition styling
     this.isOverlayMounted.set(true)
 
     requestAnimationFrame(() => {
-      const selectedItemIndex = this.getSelectedItemIndex()
-      const itemToFocus = options?.focusItem ?? Math.max(0, selectedItemIndex)
-      this.focusItem(itemToFocus, { scrollIntoViewBlock: 'center' })
+      const shouldFocus = options?.shouldFocus ?? true
+      if (shouldFocus) {
+        const selectedItemIndex = this.getSelectedItemIndex()
+        const itemToFocus = options?.focusItem ?? Math.max(0, selectedItemIndex)
+        this.focusItem(itemToFocus, { scrollIntoViewBlock: 'center' })
+      }
+
       this.isOpen.set(true)
     })
 
@@ -125,10 +144,102 @@ export class SelectService {
     }
   }
 
+  isSearchableKey(e: KeyboardEvent) {
+    // Space selects the currently focused item, so it's not searchable
+    return e.key.length === 1 && e.key !== ' ' && !e.ctrlKey && !e.altKey
+  }
+
+  async searchFor(char: string) {
+    const normalize = (str: string | undefined) => {
+      return str?.toLocaleLowerCase().normalize('NFD') ?? ''
+    }
+
+    const wasCyclingSearch = this.isCyclingSearch
+    this.isCyclingSearch = normalize(char) === normalize(this.searchString)
+
+    // if no longer cycling, clear the search string so the user can immediately begin searching for a new item
+    // ARIA APG example has a 1 typed character buffer before this, but that seems like worse behavior to me
+    if (wasCyclingSearch && !this.isCyclingSearch) {
+      this.searchString = ''
+      this.lastSearchTimestamp = performance.now()
+    }
+
+    // cycle through options that start with the same character if repeatedly pressing the character
+    if (this.isCyclingSearch) {
+      this.lastSearchTimestamp = performance.now()
+
+      const indicesOfItemsStartingWithChar = this.items().reduce((acc, item, index) => {
+        if (normalize(item.searchValue()).startsWith(normalize(char))) {
+          return [...acc, index]
+        }
+        return acc
+      }, [] as number[])
+
+      const hasMatches = indicesOfItemsStartingWithChar.length > 0
+      const focusedItemIndex = this.getFocusedItemIndex()
+
+      // if not currently focusing on one of the matching items, focus on the first
+      if (hasMatches && !indicesOfItemsStartingWithChar.includes(focusedItemIndex)) {
+        const nextItemIndex = indicesOfItemsStartingWithChar.find(
+          (index) => index > focusedItemIndex,
+        )
+        this.focusItem(nextItemIndex ?? indicesOfItemsStartingWithChar.at(0))
+      } else if (hasMatches) {
+        // index of the matching indices array that has the focusedItemIndex
+        const indicesFocusedItemIndex = indicesOfItemsStartingWithChar.findIndex(
+          (index) => index === focusedItemIndex,
+        )
+        // go to the next index from the matching indices array, wrapping if necessary
+        const nextItemIndex = indicesOfItemsStartingWithChar.at(
+          (indicesFocusedItemIndex + 1) % indicesOfItemsStartingWithChar.length,
+        )
+        this.focusItem(nextItemIndex, { scrollIntoViewBlock: 'nearest' })
+      }
+    } else {
+      // user is not pressing the same character repeatedly, add a character to the search string
+      // and continue search
+
+      this.searchString = this.searchString + char
+      this.lastSearchTimestamp = performance.now()
+
+      const focusedItemIndex = this.getFocusedItemIndex()
+
+      let itemToFocus: SelectItem | null = null
+      // find the next item that matches, starting from the currently focused index
+      // start at 1 to skip the currently focused item
+      // if there is no focused item, focusedItemIndex = -1 and we start from index 0
+      for (let i = 1; i < this.items().length; i++) {
+        const index = (focusedItemIndex + i) % this.items().length
+        const item = this.items().at(index)
+        if (item && normalize(item.searchValue()).startsWith(normalize(this.searchString))) {
+          itemToFocus = item
+          break
+        }
+      }
+
+      if (itemToFocus) {
+        this.focusItem(itemToFocus, { scrollIntoViewBlock: 'nearest' })
+      }
+    }
+
+    await new Promise((res) => setTimeout(res, SEARCH_CLEAR_DELAY))
+
+    const timeSinceLastSearchStringUpdate = performance.now() - this.lastSearchTimestamp
+    if (!this.isSearchResetCancelled && timeSinceLastSearchStringUpdate >= SEARCH_CLEAR_DELAY) {
+      this.searchString = ''
+    }
+  }
+
+  /**
+   * Get the index of the currently selected item. If no item is selected, returns -1
+   */
   private getSelectedItemIndex() {
     return this.items().findIndex((item) => item.value() === this.value())
   }
 
+  /**
+   * Get the index of the currently focused item. If no item is focused, returns -1
+   */
   private getFocusedItemIndex() {
     return this.items().findIndex((item) => item.value() === this.focusedItem()?.value())
   }
@@ -167,6 +278,7 @@ export class SelectService {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
+    const isSearchableKey = this.isSearchableKey(e)
     if (
       ![
         'ArrowDown',
@@ -179,8 +291,15 @@ export class SelectService {
         'End',
         'PageUp',
         'PageDown',
-      ].includes(e.key)
+      ].includes(e.key) &&
+      !isSearchableKey
     ) {
+      return
+    }
+
+    if (isSearchableKey) {
+      e.preventDefault()
+      this.searchFor(e.key)
       return
     }
 
@@ -235,7 +354,6 @@ export class SelectService {
       case 'PageDown': {
         e.preventDefault()
         const focusedItemIndex = this.getFocusedItemIndex()
-        console.log(focusedItemIndex)
         this.focusItem(Math.min(this.items().length - 1, focusedItemIndex + 10), {
           scrollIntoViewBlock: 'nearest',
         })

@@ -31,3 +31,7 @@ main {
   gap: 20px;
   overflow: hidden;
 }
+
+.after::after {
+  content: 'after content';
+}

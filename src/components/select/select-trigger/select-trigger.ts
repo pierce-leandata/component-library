@@ -36,11 +36,24 @@ export class SelectTriggerDirective {
       return
     }
 
-    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) {
+    const isSearchableKey = this.selectService.isSearchableKey(e)
+
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key) && !isSearchableKey) {
       return
     }
 
     e.preventDefault()
+
+    if (isSearchableKey) {
+      // prevents select service from also searching for the typed key when the listeners are attached
+      e.stopPropagation()
+      this.selectService.open({ shouldFocus: false })
+      // rAF so that the overlay can render and the items array will be populated
+      requestAnimationFrame(() => {
+        this.selectService.searchFor(e.key)
+      })
+      return
+    }
 
     switch (e.key) {
       case 'ArrowDown':

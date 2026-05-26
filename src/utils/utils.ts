@@ -9,3 +9,10 @@ export function generateId() {
 
   return `pm-${id}`
 }
+
+/**
+ * Extracts visible text from HTML, trimming and normalizing all spaces to ' '.
+ */
+export function extractTextFromHtml(html: HTMLElement) {
+  return html.innerText.replaceAll(/\s+/g, ' ').trim()
+}
