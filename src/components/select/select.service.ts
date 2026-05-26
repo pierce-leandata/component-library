@@ -163,37 +163,44 @@ export class SelectService {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
-    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape', 'Home', 'End'].includes(e.key)) {
+    if (!['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Tab', 'Escape', 'Home', 'End'].includes(e.key)) {
       return
     }
 
-    e.preventDefault()
-
     switch (e.key) {
       case 'ArrowDown': {
+        e.preventDefault()
         this.focusNextItem()
         break
       }
       case 'ArrowUp': {
+        e.preventDefault()
         this.focusPreviousItem()
         break
       }
       case 'Enter':
       case ' ': {
-        if (this.focusedItem()) {
-          this.selectFocusedItem()
-        }
+        e.preventDefault()
+        this.selectFocusedItem()
+        break
+      }
+      // Intentionally do not prevent default
+      case 'Tab': {
+        this.selectFocusedItem()
         break
       }
       case 'Escape': {
+        e.preventDefault()
         this.close()
         break
       }
       case 'Home': {
+        e.preventDefault()
         this.focusItem(0, { scrollIntoViewBlock: 'nearest' })
         break
       }
       case 'End': {
+        e.preventDefault()
         this.focusItem(-1, { scrollIntoViewBlock: 'nearest' })
         break
       }
