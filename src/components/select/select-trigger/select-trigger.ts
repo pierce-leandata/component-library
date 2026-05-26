@@ -32,10 +32,6 @@ export class SelectTriggerDirective {
   protected onKeyDown(e: KeyboardEvent) {
     if (e.key === 'ArrowDown' && !this.selectService.isOpen()) {
       this.selectService.open()
-      // rAF so that the items have been rendered and can be accessed
-      requestAnimationFrame(() => {
-        this.selectService.focusItem(0)
-      })
     }
   }
 }

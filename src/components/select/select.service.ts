@@ -67,8 +67,8 @@ export class SelectService {
     this.isOverlayMounted.set(true)
 
     requestAnimationFrame(() => {
-      const selectedItem = this.items().find((item) => item.value() === this.value())
-      selectedItem?.label()?.nativeElement.scrollIntoView({ block: 'center' })
+      const selectedItemIndex = this.items().findIndex((item) => item.value() === this.value())
+      this.focusItem(Math.max(0, selectedItemIndex), { scrollIntoViewBlock: 'center' })
       this.isOpen.set(true)
     })
 
@@ -102,16 +102,19 @@ export class SelectService {
     indexOrItem?: number | SelectItem,
     options?: {
       /**
-       * Whether to scroll the item into view.
+       * How to position the item scrolled into view.
+       * If omitted, the item will not be scrolled into view.
+       *
+       * @see https://developer.mozilla.org/docs/Web/API/Element/scrollIntoView
        */
-      scrollIntoView?: boolean
+      scrollIntoViewBlock?: ScrollLogicalPosition
     },
   ) {
     const item = typeof indexOrItem === 'number' ? this.items().at(indexOrItem) : indexOrItem
     this.focusedItem.set(item)
 
-    if (options?.scrollIntoView) {
-      item?.label()?.nativeElement.scrollIntoView({ block: 'nearest' })
+    if (options?.scrollIntoViewBlock) {
+      item?.label()?.nativeElement.scrollIntoView({ block: options.scrollIntoViewBlock })
     }
   }
 
@@ -129,7 +132,7 @@ export class SelectService {
       }
     }
 
-    this.focusItem(getNextIndex(), { scrollIntoView: true })
+    this.focusItem(getNextIndex(), { scrollIntoViewBlock: 'nearest' })
   }
 
   private focusPreviousItem() {
@@ -142,7 +145,7 @@ export class SelectService {
       }
     }
 
-    this.focusItem(getPreviousIndex(), { scrollIntoView: true })
+    this.focusItem(getPreviousIndex(), { scrollIntoViewBlock: 'nearest' })
   }
 
   private selectFocusedItem() {
