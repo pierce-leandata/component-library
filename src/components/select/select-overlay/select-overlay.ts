@@ -155,6 +155,6 @@ export class SelectOverlayComponent {
   }
 
   protected clearFocusedItem() {
-    this.selectService.focusedItem.set(undefined)
+    this.selectService.focusItem(undefined)
   }
 }

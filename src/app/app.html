@@ -89,15 +89,10 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay
-        [boundingElement]="bounds"
-        [align]="align()"
-        [side]="side()"
-        [sideOffset]="sideOffset()"
-      >
-        <pm-select-item value="option1">First</pm-select-item>
-        <pm-select-item value="option2">Option 2</pm-select-item>
-        <pm-select-item value="option3">The Third Option</pm-select-item>
+      <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
+        @for (option of options; track option.value) {
+          <pm-select-item [value]="option.value">{{ option.label }}</pm-select-item>
+        }
       </pm-select-overlay>
     </pm-select>
 
@@ -115,20 +110,10 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay
-        [boundingElement]="bounds"
-        [align]="align()"
-        [side]="side()"
-        [sideOffset]="sideOffset()"
-      >
-        <pm-select-item value="option1"
-          ><div class="container">
-            <div class="ball"></div>
-            First
-          </div></pm-select-item
-        >
-        <pm-select-item value="option2">Option 2</pm-select-item>
-        <pm-select-item value="option3">The Third Option</pm-select-item>
+      <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
+        @for (option of options; track option.value) {
+          <pm-select-item [value]="option.value">{{ option.label }}</pm-select-item>
+        }
       </pm-select-overlay>
     </pm-select>
   </div>

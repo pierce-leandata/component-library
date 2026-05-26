@@ -27,6 +27,6 @@ export class SelectItemComponent {
   }
 
   onMouseEnter() {
-    this.selectService.focusedItem.set({ value: this.value, label: this.label })
+    this.selectService.focusItem({ value: this.value, label: this.label })
   }
 }

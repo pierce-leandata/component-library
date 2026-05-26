@@ -34,7 +34,7 @@ export class SelectTriggerDirective {
       this.selectService.open()
       // rAF so that the items have been rendered and can be accessed
       requestAnimationFrame(() => {
-        this.selectService.focusedItem.set(this.selectService.items().at(0))
+        this.selectService.focusItem(0)
       })
     }
   }

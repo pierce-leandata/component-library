@@ -1,4 +1,5 @@
 <li
+  #label
   data-select-item
   role="option"
   [attr.data-focused]="isFocused()"
@@ -9,5 +10,5 @@
   (mouseenter)="onMouseEnter()"
   [tabindex]="-1"
 >
-  <div #label><ng-content /></div>
+  <ng-content />
 </li>

@@ -30,6 +30,7 @@ export class SelectService {
 
   isOverlayMounted = signal(false)
   items: WritableSignal<readonly SelectItem[]> = signal([])
+  /** DO NOT SET DIRECTLY. Use `focusItem()` method instead. */
   focusedItem = signal<SelectItem | undefined>(undefined)
   overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
   triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
@@ -64,7 +65,10 @@ export class SelectService {
     // must mount before setting to open
     // causes data-state to go from closed -> open, allowing CSS transition styling
     this.isOverlayMounted.set(true)
+
     requestAnimationFrame(() => {
+      const selectedItem = this.items().find((item) => item.value() === this.value())
+      selectedItem?.label()?.nativeElement.scrollIntoView({ block: 'center' })
       this.isOpen.set(true)
     })
 
@@ -74,7 +78,7 @@ export class SelectService {
 
   async close() {
     this.isOpen.set(false)
-    this.focusedItem.set(undefined)
+    this.focusItem(undefined)
 
     window.removeEventListener('keydown', this.onKeyDown)
     window.removeEventListener('focusout', this.onFocusOut)
@@ -94,6 +98,23 @@ export class SelectService {
     })
   }
 
+  focusItem(
+    indexOrItem?: number | SelectItem,
+    options?: {
+      /**
+       * Whether to scroll the item into view.
+       */
+      scrollIntoView?: boolean
+    },
+  ) {
+    const item = typeof indexOrItem === 'number' ? this.items().at(indexOrItem) : indexOrItem
+    this.focusedItem.set(item)
+
+    if (options?.scrollIntoView) {
+      item?.label()?.nativeElement.scrollIntoView({ block: 'nearest' })
+    }
+  }
+
   private getFocusedItemIndex() {
     return this.items().findIndex((item) => item.value() === this.focusedItem()?.value())
   }
@@ -108,12 +129,12 @@ export class SelectService {
       }
     }
 
-    this.focusedItem.set(this.items().at(getNextIndex()))
+    this.focusItem(getNextIndex(), { scrollIntoView: true })
   }
 
   private focusPreviousItem() {
     const currentIndex = this.getFocusedItemIndex()
-    const getNextIndex = () => {
+    const getPreviousIndex = () => {
       if (currentIndex === -1) {
         return this.items().length - 1
       } else {
@@ -121,7 +142,7 @@ export class SelectService {
       }
     }
 
-    this.focusedItem.set(this.items().at(getNextIndex()))
+    this.focusItem(getPreviousIndex(), { scrollIntoView: true })
   }
 
   private selectFocusedItem() {

@@ -36,4 +36,27 @@ export class App {
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
   )
+
+  protected readonly options: { label: string; value: string }[] = [
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' },
+    { label: 'Cherry', value: 'cherry' },
+    { label: 'Date', value: 'date' },
+    { label: 'Elderberry', value: 'elderberry' },
+    { label: 'Fig', value: 'fig' },
+    { label: 'Grape', value: 'grape' },
+    { label: 'Honeydew', value: 'honeydew' },
+    { label: 'Iceberg Lettuce', value: 'iceberg-lettuce' },
+    { label: 'Jackfruit', value: 'jackfruit' },
+    { label: 'Kiwi', value: 'kiwi' },
+    { label: 'Lemon', value: 'lemon' },
+    { label: 'Mango', value: 'mango' },
+    { label: 'Nectarine', value: 'nectarine' },
+    { label: 'Orange', value: 'orange' },
+    { label: 'Papaya', value: 'papaya' },
+    { label: 'Quince', value: 'quince' },
+    { label: 'Raspberry', value: 'raspberry' },
+    { label: 'Strawberry', value: 'strawberry' },
+    { label: 'Tangerine', value: 'tangerine' },
+  ]
 }
