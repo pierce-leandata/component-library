@@ -10,7 +10,7 @@
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
   >
-    <ul data-select-list role="listbox" (mouseleave)="clearFocusedItem()">
+    <ul data-select-list role="listbox">
       <ng-content />
     </ul>
   </div>

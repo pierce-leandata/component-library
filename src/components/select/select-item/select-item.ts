@@ -23,6 +23,7 @@ import { extractTextFromHtml, generateId } from '@utils/utils'
     '(click)': 'onSelect()',
     '(keydown)': 'onKeyDown($event)',
     '(mousemove)': 'onMouseMove()',
+    '(mouseleave)': 'onMouseLeave($event)',
     '[tabindex]': '-1',
   },
 })
@@ -83,6 +84,12 @@ export class SelectItemDirective {
       searchValue: this.searchValue,
       html: this.html,
     })
+  }
+
+  onMouseLeave(e: MouseEvent) {
+    if (!(e.relatedTarget as HTMLElement)?.closest('[data-select-item]')) {
+      this.selectService.focusItem(undefined)
+    }
   }
 
   private updateSearchValueAndHtml() {

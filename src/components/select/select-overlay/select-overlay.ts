@@ -1,7 +1,7 @@
 import {
-  Component,
   computed,
   contentChildren,
+  Component,
   effect,
   ElementRef,
   inject,
@@ -57,7 +57,7 @@ export class SelectOverlayComponent {
   // the positioning
   private overlaySize = trackOffsetSize(this.overlayElement)
 
-  positioning = computed<{ left: string; top: string }>(() => {
+  positioning = computed<{ left: string; top: string; position: 'absolute' | 'fixed' }>(() => {
     // use the `getBoundingClientRect` reference of the trigger because we
     // want to attach to the trigger no matter how it got to where it is
     const triggerRect = this.selectService.triggerRect()
@@ -71,6 +71,7 @@ export class SelectOverlayComponent {
       return {
         left: '',
         top: '',
+        position: 'absolute',
       }
     }
 
@@ -140,6 +141,7 @@ export class SelectOverlayComponent {
     return {
       left: `${getLeftOffsetWithinBounds()}px`,
       top: `${getTopOffsetWithinBounds()}px`,
+      position: appendToBody ? 'fixed' : 'absolute',
     }
   })
 
@@ -152,9 +154,5 @@ export class SelectOverlayComponent {
         document.body.appendChild(el)
       }
     })
-  }
-
-  protected clearFocusedItem() {
-    this.selectService.focusItem(undefined)
   }
 }
