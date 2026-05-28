@@ -12,8 +12,9 @@ import { generateId } from '@utils/utils'
 
 export interface SelectItem {
   value: Signal<string>
-  label: Signal<ElementRef<HTMLElement> | undefined>
+  label: ElementRef<HTMLElement>
   searchValue: Signal<string>
+  html: Signal<string>
 }
 
 const SEARCH_CLEAR_DELAY = 1000 as const
@@ -140,7 +141,7 @@ export class SelectService {
     this.focusedItem.set(item)
 
     if (options?.scrollIntoViewBlock) {
-      item?.label()?.nativeElement.scrollIntoView({ block: options.scrollIntoViewBlock })
+      item?.label.nativeElement.scrollIntoView({ block: options.scrollIntoViewBlock })
     }
   }
 

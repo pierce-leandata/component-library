@@ -1,25 +1,61 @@
-import { Component, computed, ElementRef, inject, input, viewChild } from '@angular/core'
+import {
+  afterNextRender,
+  computed,
+  DestroyRef,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core'
 import { SelectService } from '@components/select/select.service'
 import { extractTextFromHtml, generateId } from '@utils/utils'
 
-@Component({
-  selector: 'pm-select-item',
-  templateUrl: './select-item.html',
+@Directive({
+  selector: '[pmSelectItem]',
+  host: {
+    'data-select-item': '',
+    role: 'option',
+    '[id]': 'id',
+    '[attr.data-focused]': 'isFocused()',
+    '[attr.data-selected]': 'isSelected()',
+    '[attr.aria-selected]': 'isSelected()',
+    '(click)': 'onSelect()',
+    '(keydown)': 'onKeyDown($event)',
+    '(mousemove)': 'onMouseMove()',
+    '[tabindex]': '-1',
+  },
 })
-export class SelectItemComponent {
+export class SelectItemDirective {
   readonly value = input.required<string>()
 
   protected selectService = inject(SelectService)
+  readonly label = inject<ElementRef<HTMLElement>>(ElementRef)
+  readonly destroyRef = inject(DestroyRef)
 
+  readonly searchValue = signal('')
+  readonly html = signal(this.label.nativeElement.innerHTML)
   protected isSelected = computed(() => this.selectService.value() === this.value())
   protected isFocused = computed(() => this.selectService.focusedItem()?.value() === this.value())
-  readonly searchValue = computed(() =>
-    this.label() ? extractTextFromHtml(this.label()!.nativeElement) : '',
-  )
-
-  readonly label = viewChild<ElementRef<HTMLElement>>('label')
 
   protected id = generateId()
+
+  constructor() {
+    afterNextRender(() => this.updateSearchValueAndHtml())
+
+    const observer = new MutationObserver(() => this.updateSearchValueAndHtml())
+
+    observer.observe(this.label.nativeElement, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+    })
+
+    this.destroyRef.onDestroy(() => {
+      observer.disconnect()
+    })
+  }
 
   onSelect() {
     this.selectService.close()
@@ -45,6 +81,12 @@ export class SelectItemComponent {
       value: this.value,
       label: this.label,
       searchValue: this.searchValue,
+      html: this.html,
     })
+  }
+
+  private updateSearchValueAndHtml() {
+    this.searchValue.set(extractTextFromHtml(this.label.nativeElement))
+    this.html.set(this.label.nativeElement.innerHTML)
   }
 }

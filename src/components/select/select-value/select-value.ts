@@ -8,11 +8,10 @@ import { SelectService } from '@components/select/select.service'
 export class SelectValueComponent {
   private selectService = inject(SelectService)
 
-  protected selectedHtml = computed(
-    () =>
-      this.selectService
-        .items()
-        .find((item) => item.value() === this.selectService.value())
-        ?.label()?.nativeElement.innerHTML,
+  protected selectedHtml = computed(() =>
+    this.selectService
+      .items()
+      .find((item) => item.value() === this.selectService.value())
+      ?.html(),
   )
 }

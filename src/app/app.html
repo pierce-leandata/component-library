@@ -91,11 +91,10 @@
       </button>
       <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
         @for (option of options; track option.value) {
-          <pm-select-item [value]="option.value">{{ option.label }}</pm-select-item>
+          <li pmSelectItem [value]="option.value">{{ option.label }}</li>
         }
       </pm-select-overlay>
     </pm-select>
-
     <pm-select [appendToBody]="false">
       <button pmSelectTrigger [style.transform]="triggerTransform()">
         <pm-select-value> Placeholder </pm-select-value>
@@ -112,15 +111,8 @@
       </button>
       <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
         @for (option of options; track option.value) {
-          <pm-select-item [value]="option.value">{{ option.label }}</pm-select-item>
+          <li pmSelectItem [value]="option.value">{{ option.label }}</li>
         }
-        <pm-select-item value="test">
-          Test
-          <div>
-            Nested
-            <div class="after">Double Nest</div>
-          </div>
-        </pm-select-item>
       </pm-select-overlay>
     </pm-select>
   </div>

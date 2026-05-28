@@ -2,7 +2,7 @@ import { Component, computed, signal } from '@angular/core'
 import { SelectOverlayComponent } from '@components/select/select-overlay/select-overlay'
 import { SelectComponent } from '@components/select/select/select'
 import { SelectTriggerDirective } from '@components/select/select-trigger/select-trigger'
-import { SelectItemComponent } from '@components/select/select-item/select-item'
+import { SelectItemDirective } from '@components/select/select-item/select-item'
 import { SelectValueComponent } from '@components/select/select-value/select-value'
 import { SelectTriggerIconDirective } from '@components/select/select-trigger-icon/select-trigger-icon'
 
@@ -13,7 +13,7 @@ import { SelectTriggerIconDirective } from '@components/select/select-trigger-ic
     SelectOverlayComponent,
     SelectTriggerDirective,
     SelectTriggerIconDirective,
-    SelectItemComponent,
+    SelectItemDirective,
     SelectValueComponent,
   ],
   templateUrl: './app.html',

@@ -8,9 +8,9 @@ import {
   input,
   viewChild,
 } from '@angular/core'
-import { SelectItemComponent } from '@components/select/select-item/select-item'
 import { SelectService } from '@components/select/select.service'
 import { trackOffsetSize } from '@utils/sizing'
+import { SelectItemDirective } from '../select-item/select-item'
 
 @Component({
   selector: 'pm-select-overlay',
@@ -50,7 +50,7 @@ export class SelectOverlayComponent {
 
   protected selectService = inject(SelectService)
 
-  private items = contentChildren(SelectItemComponent, { descendants: true })
+  private items = contentChildren(SelectItemDirective, { descendants: true })
   private overlayElement = viewChild<ElementRef<HTMLElement>>('overlayElement')
   // use the overlay element's offset size for calculations. these values
   // ignore CSS transforms, so the user can use transforms without breaking
