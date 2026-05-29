@@ -4,7 +4,6 @@ import { SelectService } from '@components/select/select.service'
 @Component({
   selector: 'pm-select',
   templateUrl: './select.html',
-  styleUrl: './select.scss',
   providers: [SelectService],
 })
 export class SelectComponent {

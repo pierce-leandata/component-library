@@ -15,7 +15,6 @@ import { SelectItemDirective } from '../select-item/select-item'
 @Component({
   selector: 'pm-select-overlay',
   templateUrl: './select-overlay.html',
-  styleUrl: './select-overlay.scss',
 })
 export class SelectOverlayComponent {
   /**

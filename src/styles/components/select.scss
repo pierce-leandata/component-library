@@ -1,0 +1,11 @@
+[data-select] {
+  position: relative;
+}
+
+[data-select-overlay] {
+  z-index: 1000;
+}
+
+[data-select-list] {
+  list-style: none;
+}
