@@ -115,6 +115,26 @@
             }
           </ul>
         }
+        <ul pmSelectItemGroup>
+          <li pmSelectItemGroupLabel>Rich HTML</li>
+          <li pmSelectItem value="rich-bold"><b>Bold</b> item</li>
+          <li pmSelectItem value="rich-italic"><i>Italic</i> item</li>
+          <li pmSelectItem value="rich-classes">
+            <span class="rich-row">
+              <span class="rich-dot"></span>
+              <span>With <b>classes</b></span>
+            </span>
+          </li>
+          <li pmSelectItem value="rich-template">
+            <ng-container *ngTemplateOutlet="template"></ng-container>
+          </li>
+          <li pmSelectItem value="rich-nested">
+            <span>
+              nested
+              <b>elems <i>work!</i></b>
+            </span>
+          </li>
+        </ul>
       </pm-select-overlay>
     </pm-select>
     <pm-select [appendToBody]="false">
@@ -145,7 +165,29 @@
             }
           </ul>
         }
+        <ul pmSelectItemGroup>
+          <li pmSelectItemGroupLabel>Rich HTML</li>
+          <li pmSelectItem value="rich-bold"><b>Bold</b> item</li>
+          <li pmSelectItem value="rich-italic"><i>Italic</i> item</li>
+          <li pmSelectItem value="rich-classes">
+            <span class="rich-row">
+              <span class="rich-dot"></span>
+              <span>With <b>classes</b></span>
+            </span>
+          </li>
+          <li pmSelectItem value="rich-template">
+            <ng-container *ngTemplateOutlet="template"></ng-container>
+          </li>
+          <li pmSelectItem value="rich-nested">
+            <span>
+              nested
+              <b>elems <i>work!</i></b>
+            </span>
+          </li>
+        </ul>
       </pm-select-overlay>
     </pm-select>
   </div>
 </main>
+
+<ng-template #template> from ng-template </ng-template>

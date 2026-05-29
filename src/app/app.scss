@@ -10,6 +10,20 @@ main {
   body:has(pm-app-root.use-trigger-width) [data-select-overlay] {
     width: var(--pm-select-trigger-width);
   }
+
+  .rich-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rich-dot {
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 999px;
+    background: crimson;
+    flex-shrink: 0;
+  }
 }
 
 .bounds {

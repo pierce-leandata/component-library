@@ -7,6 +7,7 @@ import { SelectItemGroupDirective } from '@components/select/select-item-group/s
 import { SelectItemGroupLabelDirective } from '@components/select/select-item-group-label/select-item-group-label'
 import { SelectValueComponent } from '@components/select/select-value/select-value'
 import { SelectTriggerIconDirective } from '@components/select/select-trigger-icon/select-trigger-icon'
+import { NgTemplateOutlet } from '@angular/common'
 
 @Component({
   selector: 'pm-app-root',
@@ -19,6 +20,7 @@ import { SelectTriggerIconDirective } from '@components/select/select-trigger-ic
     SelectItemGroupDirective,
     SelectItemGroupLabelDirective,
     SelectValueComponent,
+    NgTemplateOutlet,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
