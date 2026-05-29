@@ -39,7 +39,7 @@ export class SelectItemDirective {
   protected isSelected = computed(() => this.selectService.value() === this.value())
   protected isFocused = computed(() => this.selectService.focusedItem()?.value() === this.value())
 
-  protected id = generateId()
+  id = generateId()
 
   constructor() {
     afterNextRender(() => this.updateSearchValueAndHtml())
@@ -79,6 +79,7 @@ export class SelectItemDirective {
     if (this.selectService.focusedItem()?.value() === this.value()) return
 
     this.selectService.focusItem({
+      id: this.id,
       value: this.value,
       label: this.label,
       searchValue: this.searchValue,

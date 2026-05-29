@@ -95,8 +95,13 @@
         [side]="side()"
         [sideOffset]="sideOffset()"
       >
-        @for (option of options; track option.value) {
-          <li pmSelectItem [value]="option.value">{{ option.label }}</li>
+        @for (group of optionGroups; track group.name) {
+          <ul pmSelectItemGroup>
+            <li pmSelectItemGroupLabel>{{ group.name }}</li>
+            @for (option of group.options; track option.value) {
+              <li pmSelectItem [value]="option.value">{{ option.label }}</li>
+            }
+          </ul>
         }
       </pm-select-overlay>
     </pm-select>
@@ -120,8 +125,13 @@
         [side]="side()"
         [sideOffset]="sideOffset()"
       >
-        @for (option of options; track option.value) {
-          <li pmSelectItem [value]="option.value">{{ option.label }}</li>
+        @for (group of optionGroups; track group.name) {
+          <ul pmSelectItemGroup>
+            <li pmSelectItemGroupLabel>{{ group.name }}</li>
+            @for (option of group.options; track option.value) {
+              <li pmSelectItem [value]="option.value">{{ option.label }}</li>
+            }
+          </ul>
         }
       </pm-select-overlay>
     </pm-select>

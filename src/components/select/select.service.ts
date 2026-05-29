@@ -11,6 +11,7 @@ import { trackBoundingRect } from '@utils/sizing'
 import { generateId } from '@utils/utils'
 
 export interface SelectItem {
+  id: string
   value: Signal<string>
   label: ElementRef<HTMLElement>
   searchValue: Signal<string>
