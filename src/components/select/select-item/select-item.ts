@@ -76,6 +76,7 @@ export class SelectItemDirective {
   // the mouse "enters" a different select item than the one you focused by typing,
   // causing it to focus, which is a confusing experience
   onMouseMove() {
+    this.selectService.isKeyboardNavigating.set(false)
     if (this.selectService.focusedItem()?.value() === this.value()) return
 
     this.selectService.focusItem({
@@ -88,6 +89,8 @@ export class SelectItemDirective {
   }
 
   onMouseLeave(e: MouseEvent) {
+    if (this.selectService.isKeyboardNavigating()) return
+
     if (!(e.relatedTarget as HTMLElement)?.closest('[data-select-item]')) {
       this.selectService.focusItem(undefined)
     }

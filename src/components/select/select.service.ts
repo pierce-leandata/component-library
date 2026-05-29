@@ -35,6 +35,7 @@ export class SelectService {
 
   isOverlayMounted = signal(false)
   items: WritableSignal<readonly SelectItem[]> = signal([])
+  isKeyboardNavigating = signal(false)
   /** DO NOT SET DIRECTLY. Use `focusItem()` method instead. */
   focusedItem = signal<SelectItem | undefined>(undefined)
   overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
@@ -107,6 +108,7 @@ export class SelectService {
   async close() {
     this.isOpen.set(false)
     this.focusItem(undefined)
+    this.isKeyboardNavigating.set(false)
 
     window.removeEventListener('keydown', this.onKeyDown)
     window.removeEventListener('focusout', this.onFocusOut)
@@ -298,6 +300,8 @@ export class SelectService {
     ) {
       return
     }
+
+    this.isKeyboardNavigating.set(true)
 
     if (isSearchableKey) {
       e.preventDefault()
