@@ -14,7 +14,7 @@ export class SelectComponent {
    */
   appendToBody = input<boolean>(false)
 
-  selectService = inject(SelectService)
+  private selectService = inject(SelectService)
 
   private wrapperElement = viewChild<ElementRef<HTMLElement>>('wrapper')
 

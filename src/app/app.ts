@@ -22,6 +22,9 @@ import { SelectTriggerIconDirective } from '@components/select/select-trigger-ic
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  host: {
+    '[class.use-trigger-width]': 'useTriggerWidth()',
+  },
 })
 export class App {
   protected readonly title = signal('test')
@@ -36,6 +39,8 @@ export class App {
   protected translateY = signal(0)
 
   protected sideOffset = signal(0)
+
+  protected useTriggerWidth = signal(false)
 
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,

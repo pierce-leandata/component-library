@@ -6,7 +6,12 @@
     [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
     [attr.data-align]="align()"
     [attr.data-side]="positioning().computedSide"
-    [style]="{ left: positioning().left, top: positioning().top, position: positioning().position }"
+    [style]="{
+      '--pm-select-trigger-width': `${selectService.triggerRect()?.width}px`,
+      left: positioning().left,
+      top: positioning().top,
+      position: positioning().position,
+    }"
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
   >

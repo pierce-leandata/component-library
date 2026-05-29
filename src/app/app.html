@@ -72,6 +72,18 @@
         />
       </label>
     </fieldset>
+
+    <fieldset>
+      <legend>Width</legend>
+      <label>
+        <input
+          type="checkbox"
+          [checked]="useTriggerWidth()"
+          (change)="useTriggerWidth.set($any($event.target).checked)"
+        />
+        Use trigger width
+      </label>
+    </fieldset>
   </div>
 
   <div #bounds class="bounds">
