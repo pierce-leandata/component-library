@@ -74,11 +74,15 @@ body {
   flex-shrink: 0;
 }
 
-[data-select-value] {
+pm-select-value {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
   text-align: left;
+}
+
+[data-select-value] {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 [data-select-item] {
