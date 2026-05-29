@@ -5,8 +5,8 @@
     [attr.data-select-overlay-appended-to-body]="selectService.appendToBody()"
     [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
     [attr.data-align]="align()"
-    [attr.data-side]="side()"
-    [style]="positioning()"
+    [attr.data-side]="positioning().computedSide"
+    [style]="{ left: positioning().left, top: positioning().top, position: positioning().position }"
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
   >

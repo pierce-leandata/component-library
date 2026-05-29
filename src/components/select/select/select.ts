@@ -9,6 +9,9 @@ import { SelectService } from '@components/select/select.service'
 export class SelectComponent {
   isOpen = model(false)
   value = model<string>()
+  /**
+   * Whether to reparent the overlay onto the `body`.
+   */
   appendToBody = input<boolean>(false)
 
   selectService = inject(SelectService)

@@ -11,6 +11,7 @@ import {
 import { SelectService } from '@components/select/select.service'
 import { trackOffsetSize } from '@utils/sizing'
 import { SelectItemDirective } from '../select-item/select-item'
+import { Alignment, getOverlayPosition, OverlayPosition, VerticalSide } from '@utils/positioning'
 
 @Component({
   selector: 'pm-select-overlay',
@@ -19,12 +20,12 @@ import { SelectItemDirective } from '../select-item/select-item'
 export class SelectOverlayComponent {
   /**
    * How to align the overlay relative to the trigger.
-   * The overlay will be kept within the bounds of the window if the chosen alignment
-   * would cause the overlay to go off-screen.
+   * The overlay will be kept within the bounds of the window and bounding element
+   * (if provided).
    *
    * @default 'center'
    */
-  align = input<'start' | 'center' | 'end'>('center')
+  align = input<Alignment>('center')
   /**
    * Which side of the trigger to place the overlay.
    * If there is no room on the chosen side of the overlay and the opposite side has
@@ -32,7 +33,7 @@ export class SelectOverlayComponent {
    *
    * @default 'bottom'
    */
-  side = input<'top' | 'bottom'>('bottom')
+  side = input<VerticalSide>('bottom')
   /**
    * Additional space between trigger and the overlay.
    *
@@ -56,7 +57,7 @@ export class SelectOverlayComponent {
   // the positioning
   private overlaySize = trackOffsetSize(this.overlayElement)
 
-  positioning = computed<{ left: string; top: string; position: 'absolute' | 'fixed' }>(() => {
+  positioning = computed<OverlayPosition<VerticalSide>>(() => {
     // use the `getBoundingClientRect` reference of the trigger because we
     // want to attach to the trigger no matter how it got to where it is
     const triggerRect = this.selectService.triggerRect()
@@ -65,83 +66,28 @@ export class SelectOverlayComponent {
     const appendToBody = this.selectService.appendToBody()
     const align = this.align()
     const side = this.side()
+    const sideOffset = this.sideOffset()
+    const boundingElement = this.boundingElement() ?? document.documentElement
 
-    if (!triggerRect) {
+    if (!triggerRect || !wrapperRect || !overlaySize) {
       return {
         left: '',
         top: '',
         position: 'absolute',
+        computedSide: side,
       }
     }
 
-    // origin for the positioning = viewport when appended to body,
-    // wrapper otherwise. subtracting the wrapper's rect makes the
-    // calculations transform-aware since both rects are post-transform.
-    const originLeft = appendToBody ? 0 : (wrapperRect?.left ?? 0)
-    const originTop = appendToBody ? 0 : (wrapperRect?.top ?? 0)
-    const triggerLeftOffset = triggerRect.left - originLeft
-    const triggerTopOffset = triggerRect.top - originTop
-    const triggerWidth = triggerRect.width
-    const triggerHeight = triggerRect.height
-    const overlayWidth = overlaySize?.width ?? 0
-    const overlayHeight = overlaySize?.height ?? 0
-    const boundingElement = this.boundingElement() ?? document.documentElement
-
-    const getLeftOffset = (align: 'start' | 'center' | 'end') => {
-      if (align === 'start') {
-        return triggerLeftOffset
-      } else if (align === 'center') {
-        return triggerLeftOffset + triggerWidth / 2 - overlayWidth / 2
-      } else {
-        return triggerLeftOffset + (triggerWidth - overlayWidth)
-      }
-    }
-
-    const getTopOffset = (side: 'top' | 'bottom') => {
-      if (side === 'top') {
-        return triggerTopOffset - overlayHeight - this.sideOffset()
-      } else {
-        return triggerTopOffset + triggerHeight + this.sideOffset()
-      }
-    }
-
-    const getLeftOffsetWithinBounds = () => {
-      const offsetToTry = getLeftOffset(align)
-      const boundingElementWidth = boundingElement.offsetWidth
-      const boundingElementLeft = boundingElement.offsetLeft
-
-      return Math.min(
-        boundingElementLeft + boundingElementWidth - overlayWidth - originLeft,
-        Math.max(boundingElementLeft - originLeft, offsetToTry),
-      )
-    }
-
-    const getTopOffsetWithinBounds = () => {
-      const offsetToTry = getTopOffset(side)
-
-      const boundingElementRect = boundingElement.getBoundingClientRect()
-      const boundingElementHeight = boundingElementRect.height
-      const boundingElementTop = boundingElementRect.top
-
-      const isAboveBounds = originTop + offsetToTry < boundingElementTop
-      const isBelowBounds =
-        originTop + offsetToTry + overlayHeight > boundingElementHeight + boundingElementTop
-      const spaceAboveTrigger = triggerRect.top - boundingElementTop
-      const spaceBelowTrigger = boundingElementTop + boundingElementHeight - triggerRect.bottom
-
-      if (side === 'top' && isAboveBounds && spaceBelowTrigger > spaceAboveTrigger)
-        return getTopOffset('bottom')
-      if (side === 'bottom' && isBelowBounds && spaceAboveTrigger > spaceBelowTrigger)
-        return getTopOffset('top')
-
-      return offsetToTry
-    }
-
-    return {
-      left: `${getLeftOffsetWithinBounds()}px`,
-      top: `${getTopOffsetWithinBounds()}px`,
-      position: appendToBody ? 'fixed' : 'absolute',
-    }
+    return getOverlayPosition({
+      anchorRect: triggerRect,
+      wrapperRect,
+      overlaySize,
+      align,
+      side,
+      sideOffset,
+      appendToBody,
+      boundingElement,
+    })
   })
 
   constructor() {
