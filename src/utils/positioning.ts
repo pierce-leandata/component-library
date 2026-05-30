@@ -64,7 +64,7 @@ export function getOverlayPosition({
   appendToBody?: boolean
   /**
    * What element to use as the bounds of the overlay.
-   * The overlay will still be kept on-screen when possible.
+   * If not provided, the overlay will be kept on-screen when possible.
    */
   boundingElement?: HTMLElement
 }): OverlayPosition<VerticalSide> {

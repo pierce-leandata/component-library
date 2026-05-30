@@ -1,92 +1,122 @@
 <main>
-  <div style="display: flex; flex-direction: column; gap: 10px">
-    <fieldset>
-      <legend>Align</legend>
-      @for (option of alignOptions; track option) {
+  <div class="controls">
+    <section class="controls__section">
+      <h2>Trigger</h2>
+      <fieldset>
+        <legend>Transform</legend>
+        <label>
+          <span>X ({{ translateX() }}px)</span>
+          <input
+            type="range"
+            min="-100"
+            max="100"
+            step="5"
+            [value]="translateX()"
+            (input)="translateX.set(+$any($event.target).value)"
+          />
+        </label>
+        <label>
+          <span>Y ({{ translateY() }}px)</span>
+          <input
+            type="range"
+            min="-100"
+            max="100"
+            step="5"
+            [value]="translateY()"
+            (input)="translateY.set(+$any($event.target).value)"
+          />
+        </label>
+      </fieldset>
+    </section>
+    <hr />
+    <section class="controls__section">
+      <h2>Overlay</h2>
+      <fieldset>
+        <legend>Align</legend>
+        <pm-select value="align()">
+          <button pmSelectTrigger>
+            <pm-select-value>Alignment</pm-select-value>
+            <svg
+              pmSelectTriggerIcon
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+            >
+              <!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE -->
+              <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
+            </svg>
+          </button>
+          <pm-select-overlay>
+            @for (option of alignOptions; track option) {
+              <li pmSelectItem [value]="option">{{ option }}</li>
+            }
+          </pm-select-overlay>
+        </pm-select>
+      </fieldset>
+
+      <fieldset>
+        <legend>Side</legend>
+        @for (option of sideOptions; track option) {
+          <label>
+            <input
+              type="radio"
+              name="side"
+              [value]="option"
+              [checked]="side() === option"
+              (change)="side.set(option)"
+            />
+            {{ option }}
+          </label>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Side offset</legend>
+        <label>
+          <span>{{ sideOffset() }}px</span>
+          <input
+            type="range"
+            min="0"
+            max="20"
+            step="1"
+            [value]="sideOffset()"
+            (input)="sideOffset.set(+$any($event.target).value)"
+          />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Behavior</legend>
         <label>
           <input
-            type="radio"
-            name="align"
-            [value]="option"
-            [checked]="align() === option"
-            (change)="align.set(option)"
+            type="checkbox"
+            [checked]="appendToBody()"
+            (change)="appendToBody.set($any($event.target).checked)"
           />
-          {{ option }}
+          Append to body
         </label>
-      }
-    </fieldset>
-
-    <fieldset>
-      <legend>Side</legend>
-      @for (option of sideOptions; track option) {
         <label>
           <input
-            type="radio"
-            name="side"
-            [value]="option"
-            [checked]="side() === option"
-            (change)="side.set(option)"
+            type="checkbox"
+            [checked]="useBoundingElement()"
+            (change)="useBoundingElement.set($any($event.target).checked)"
           />
-          {{ option }}
+          Use bounding element
         </label>
-      }
-    </fieldset>
-
-    <fieldset>
-      <legend>Trigger transform</legend>
-      <label>
-        <span>Translate X ({{ translateX() }}px)</span>
-        <input
-          type="range"
-          min="-100"
-          max="100"
-          step="5"
-          [value]="translateX()"
-          (input)="translateX.set(+$any($event.target).value)"
-        />
-      </label>
-      <label>
-        <span>Translate Y ({{ translateY() }}px)</span>
-        <input
-          type="range"
-          min="-100"
-          max="100"
-          step="5"
-          [value]="translateY()"
-          (input)="translateY.set(+$any($event.target).value)"
-        />
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Side offset</legend>
-      <label>
-        <span>Side offset ({{ sideOffset() }}px)</span>
-        <input
-          type="range"
-          min="-50"
-          max="50"
-          step="5"
-          [value]="sideOffset()"
-          (input)="sideOffset.set(+$any($event.target).value)"
-        />
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Width</legend>
-      <label>
-        <input
-          type="checkbox"
-          [checked]="useTriggerWidth()"
-          (change)="useTriggerWidth.set($any($event.target).checked)"
-        />
-        Use trigger width
-      </label>
-    </fieldset>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="useTriggerWidth()"
+            (change)="useTriggerWidth.set($any($event.target).checked)"
+          />
+          Use trigger width
+        </label>
+      </fieldset>
+    </section>
   </div>
 
-  <div #bounds class="bounds">
+  <div #bounds class="bounds" [class.bounds--active]="useBoundingElement()">
     <pm-select>
       <button pmSelectTrigger [style.transform]="triggerTransform()">
         <pm-select-value> Placeholder </pm-select-value>
@@ -105,57 +135,8 @@
         [align]="align()"
         [side]="side()"
         [sideOffset]="sideOffset()"
-        [appendToBody]="true"
-      >
-        @for (group of optionGroups; track group.name) {
-          <ul pmSelectItemGroup>
-            <li pmSelectItemGroupLabel>{{ group.name }}</li>
-            @for (option of group.options; track option.value) {
-              <li pmSelectItem [value]="option.value">{{ option.label }}</li>
-            }
-          </ul>
-        }
-        <ul pmSelectItemGroup>
-          <li pmSelectItemGroupLabel>Rich HTML</li>
-          <li pmSelectItem value="rich-bold"><b>Bold</b> item</li>
-          <li pmSelectItem value="rich-italic"><i>Italic</i> item</li>
-          <li pmSelectItem value="rich-classes">
-            <span class="rich-row">
-              <span class="rich-dot"></span>
-              <span>With <b>classes</b></span>
-            </span>
-          </li>
-          <li pmSelectItem value="rich-template">
-            <ng-container *ngTemplateOutlet="template"></ng-container>
-          </li>
-          <li pmSelectItem value="rich-nested">
-            <span>
-              nested
-              <b>elems <i>work!</i></b>
-            </span>
-          </li>
-        </ul>
-      </pm-select-overlay>
-    </pm-select>
-    <pm-select>
-      <button pmSelectTrigger [style.transform]="triggerTransform()">
-        <pm-select-value> Placeholder </pm-select-value>
-        <svg
-          pmSelectTriggerIcon
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-        >
-          <!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE -->
-          <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
-        </svg>
-      </button>
-      <pm-select-overlay
-        [align]="align()"
-        [side]="side()"
-        [sideOffset]="sideOffset()"
-        [appendToBody]="false"
+        [appendToBody]="appendToBody()"
+        [boundingElement]="useBoundingElement() ? bounds : undefined"
       >
         @for (group of optionGroups; track group.name) {
           <ul pmSelectItemGroup>

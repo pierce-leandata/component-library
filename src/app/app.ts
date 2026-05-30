@@ -44,6 +44,9 @@ export class App {
 
   protected useTriggerWidth = signal(false)
 
+  protected appendToBody = signal(false)
+  protected useBoundingElement = signal(false)
+
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
   )

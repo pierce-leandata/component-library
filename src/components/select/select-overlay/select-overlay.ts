@@ -42,9 +42,7 @@ export class SelectOverlayComponent {
   sideOffset = input(0)
   /**
    * What element to use as the bounds of the overlay.
-   * The overlay will still be kept on-screen when possible.
-   *
-   * @default <html>
+   * If not provided, the overlay will be kept on-screen when possible.
    */
   boundingElement = input<HTMLElement>()
   /**

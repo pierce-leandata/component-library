@@ -1,29 +1,27 @@
-$bg: white;
-$fg: #222;
-$primary: #00659f;
-$text: color-mix(in oklch, $primary 5%, $fg);
-$border: color-mix(in oklch, $text 15%, $bg);
-$placeholder: color-mix(in oklch, $text 50%, $bg);
-$bg-overlay: color-mix(in oklch, $primary 5%, $bg);
+@use 'variables' as *;
 
-body {
-  font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  font-family: 'Geist', sans-serif;
   background-color: $bg;
-  color: $text;
+  color: $fg;
+  color-scheme: light dark;
+  accent-color: $primary;
 }
 
-*:focus {
-  outline: 2px solid $primary;
-  outline-offset: -2px;
+*:focus-visible {
+  outline: 2px auto $primary;
 }
 
 [data-select-overlay] {
   width: 180px;
   padding: 4px;
-  background: $bg-overlay;
+  background: $overlay-bg;
   border-radius: 8px;
   max-height: 280px;
   overflow: auto;
+  box-shadow: 2px 3px 8px $shadow;
   transition:
     opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     scale 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -41,6 +39,10 @@ body {
     opacity: 1;
     scale: 1;
   }
+
+  // &[data-state='closed'] {
+  //   transition-duration: 10000s;
+  // }
 
   &[data-align='start'][data-side='top'] {
     transform-origin: bottom left;
@@ -75,12 +77,17 @@ body {
   height: 40px;
   border-radius: 8px;
   border: 2px solid $border;
+  background: $bg;
   padding-inline: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   width: 100%;
+
+  &:focus-visible {
+    background: $focus-bg;
+  }
 }
 
 [data-select-trigger-icon] {
@@ -115,7 +122,7 @@ pm-select-value {
   min-height: 32px;
   display: flex;
   align-items: center;
-  color: color-mix(in oklch, black 45%, $bg-overlay);
+  color: color-mix(in oklch, $fg 50%, $overlay-bg);
   font-size: 0.875rem;
 }
 
@@ -126,11 +133,11 @@ pm-select-value {
   align-items: center;
   gap: 8px;
   border-radius: 4px;
-  color: color-mix(in oklch, black 60%, $bg-overlay);
+  color: color-mix(in oklch, $fg 80%, $overlay-bg);
   cursor: pointer;
 
   &[data-focused='true'] {
-    background-color: color-mix(in oklch, $primary 10%, $bg-overlay);
+    background-color: color-mix(in oklch, $primary 10%, $overlay-bg);
   }
 
   &[data-selected='true'] {

@@ -24,15 +24,24 @@ h5,
 h6 {
   font-weight: inherit;
   font-size: inherit;
+  margin: 0;
 }
 
 ul,
 ol,
-p {
+p,
+fieldset,
+legend,
+input {
   margin: 0;
   padding: 0;
 }
 
-span {
+fieldset {
+  border: none;
+}
+
+span,
+label {
   display: block;
 }
