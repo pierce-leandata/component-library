@@ -22,7 +22,7 @@ export function getOverlayPosition({
   side,
   sideOffset = 0,
   appendToBody = false,
-  boundingElement = document.documentElement,
+  boundingElement,
 }: {
   /**
    * The DOMRect for the element this overlay is anchored to.
@@ -65,8 +65,6 @@ export function getOverlayPosition({
   /**
    * What element to use as the bounds of the overlay.
    * The overlay will still be kept on-screen when possible.
-   *
-   * @default <html>
    */
   boundingElement?: HTMLElement
 }): OverlayPosition<VerticalSide> {
@@ -81,6 +79,8 @@ export function getOverlayPosition({
   const anchorHeight = anchorRect.height
   const overlayWidth = overlaySize?.width ?? 0
   const overlayHeight = overlaySize?.height ?? 0
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
 
   const getLeftOffset = (align: 'start' | 'center' | 'end') => {
     if (align === 'start') {
@@ -102,11 +102,11 @@ export function getOverlayPosition({
 
   const getLeftOffsetWithinBounds = () => {
     const offsetToTry = getLeftOffset(align)
-    const boundingElementWidth = boundingElement.offsetWidth
-    const boundingElementLeft = boundingElement.offsetLeft
+    const availableWidth = boundingElement?.offsetWidth ?? windowWidth
+    const boundingElementLeft = boundingElement?.offsetLeft ?? 0
 
     return Math.min(
-      boundingElementLeft + boundingElementWidth - overlayWidth - originLeft,
+      boundingElementLeft + availableWidth - overlayWidth - originLeft,
       Math.max(boundingElementLeft - originLeft, offsetToTry),
     )
   }
@@ -114,21 +114,20 @@ export function getOverlayPosition({
   const isFlippedSide = () => {
     const offsetToTry = getTopOffset(side)
 
-    const boundingElementRect = boundingElement.getBoundingClientRect()
-    const boundingElementHeight = boundingElementRect.height
-    const boundingElementTop = boundingElementRect.top
+    const boundingElementRect = boundingElement?.getBoundingClientRect()
+    const availableHeight = boundingElementRect?.height ?? windowHeight
+    const boundsTop = boundingElementRect?.top ?? 0
 
-    const isAboveBounds = originTop + offsetToTry < boundingElementTop
-    const isBelowBounds =
-      originTop + offsetToTry + overlayHeight > boundingElementHeight + boundingElementTop
-    const spaceAboveanchor = anchorRect.top - boundingElementTop
-    const spaceBelowanchor = boundingElementTop + boundingElementHeight - anchorRect.bottom
+    const isAboveBounds = originTop + offsetToTry < boundsTop
+    const isBelowBounds = originTop + offsetToTry + overlayHeight > availableHeight + boundsTop
+    const spaceAboveAnchor = anchorRect.top - boundsTop
+    const spaceBelowAnchor = boundsTop + availableHeight - anchorRect.bottom
 
-    if (side === 'top' && isAboveBounds && spaceBelowanchor > spaceAboveanchor) {
+    if (side === 'top' && isAboveBounds && spaceBelowAnchor > spaceAboveAnchor) {
       return true
     }
 
-    if (side === 'bottom' && isBelowBounds && spaceAboveanchor > spaceBelowanchor) {
+    if (side === 'bottom' && isBelowBounds && spaceAboveAnchor > spaceBelowAnchor) {
       return true
     }
 

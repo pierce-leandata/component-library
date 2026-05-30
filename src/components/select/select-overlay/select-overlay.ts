@@ -67,7 +67,7 @@ export class SelectOverlayComponent {
     const align = this.align()
     const side = this.side()
     const sideOffset = this.sideOffset()
-    const boundingElement = this.boundingElement() ?? document.documentElement
+    const boundingElement = this.boundingElement()
 
     if (!triggerRect || !wrapperRect || !overlaySize) {
       return {
