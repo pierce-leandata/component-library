@@ -93,7 +93,8 @@ export class SelectService {
       if (shouldFocus) {
         const selectedItemIndex = this.getSelectedItemIndex()
         const itemToFocus = options?.focusItem ?? Math.max(0, selectedItemIndex)
-        this.focusItem(itemToFocus, { scrollIntoViewBlock: 'center' })
+        const shouldScrollIntoView = selectedItemIndex !== -1 || options?.focusItem !== undefined
+        this.focusItem(itemToFocus, shouldScrollIntoView ? { scrollIntoView: true } : undefined)
       }
 
       this.isOpen.set(true)
@@ -128,19 +129,16 @@ export class SelectService {
     indexOrItem?: number | SelectItem,
     options?: {
       /**
-       * How to position the item scrolled into view.
-       * If omitted, the item will not be scrolled into view.
-       *
-       * @see https://developer.mozilla.org/docs/Web/API/Element/scrollIntoView
+       * Whether to scroll the item into view.
        */
-      scrollIntoViewBlock?: ScrollLogicalPosition
+      scrollIntoView?: boolean
     },
   ) {
     const item = typeof indexOrItem === 'number' ? this.items().at(indexOrItem) : indexOrItem
     this.focusedItem.set(item)
 
-    if (options?.scrollIntoViewBlock) {
-      item?.label.nativeElement.scrollIntoView({ block: options.scrollIntoViewBlock })
+    if (options?.scrollIntoView) {
+      item?.label.nativeElement.scrollIntoView({ block: 'nearest' })
     }
   }
 
@@ -193,7 +191,7 @@ export class SelectService {
         const nextItemIndex = indicesOfItemsStartingWithChar.at(
           (indicesFocusedItemIndex + 1) % indicesOfItemsStartingWithChar.length,
         )
-        this.focusItem(nextItemIndex, { scrollIntoViewBlock: 'nearest' })
+        this.focusItem(nextItemIndex, { scrollIntoView: true })
       }
     } else {
       // user is not pressing the same character repeatedly, add a character to the search string
@@ -218,7 +216,7 @@ export class SelectService {
       }
 
       if (itemToFocus) {
-        this.focusItem(itemToFocus, { scrollIntoViewBlock: 'nearest' })
+        this.focusItem(itemToFocus, { scrollIntoView: true })
       }
     }
 
@@ -266,7 +264,7 @@ export class SelectService {
       }
     }
 
-    this.focusItem(getNextIndex(), { scrollIntoViewBlock: 'nearest' })
+    this.focusItem(getNextIndex(), { scrollIntoView: true })
   }
 
   private focusPreviousItem() {
@@ -279,7 +277,7 @@ export class SelectService {
       }
     }
 
-    this.focusItem(getPreviousIndex(), { scrollIntoViewBlock: 'nearest' })
+    this.focusItem(getPreviousIndex(), { scrollIntoView: true })
   }
 
   private selectFocusedItem() {
@@ -351,25 +349,25 @@ export class SelectService {
       }
       case 'Home': {
         e.preventDefault()
-        this.focusItem(0, { scrollIntoViewBlock: 'nearest' })
+        this.focusItem(0, { scrollIntoView: true })
         break
       }
       case 'End': {
         e.preventDefault()
-        this.focusItem(-1, { scrollIntoViewBlock: 'nearest' })
+        this.focusItem(-1, { scrollIntoView: true })
         break
       }
       case 'PageUp': {
         e.preventDefault()
         const focusedItemIndex = this.getFocusedItemIndex()
-        this.focusItem(Math.max(0, focusedItemIndex - 10), { scrollIntoViewBlock: 'nearest' })
+        this.focusItem(Math.max(0, focusedItemIndex - 10), { scrollIntoView: true })
         break
       }
       case 'PageDown': {
         e.preventDefault()
         const focusedItemIndex = this.getFocusedItemIndex()
         this.focusItem(Math.min(this.items().length - 1, focusedItemIndex + 10), {
-          scrollIntoViewBlock: 'nearest',
+          scrollIntoView: true,
         })
         break
       }
