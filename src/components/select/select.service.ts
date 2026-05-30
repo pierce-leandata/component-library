@@ -29,7 +29,6 @@ export class SelectService {
   /** DO NOT SET DIRECTLY. Use `open()` and `close()` methods */
   isOpen = signal(false)
   value = signal<string | undefined>(undefined)
-  appendToBody: Signal<boolean> = signal<boolean>(false)
 
   // ------------------------------------- //
 

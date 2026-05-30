@@ -47,6 +47,10 @@ export class SelectOverlayComponent {
    * @default <html>
    */
   boundingElement = input<HTMLElement>()
+  /**
+   * Whether to reparent the overlay onto the `body`.
+   */
+  appendToBody = input<boolean>(false)
 
   protected selectService = inject(SelectService)
 
@@ -63,7 +67,7 @@ export class SelectOverlayComponent {
     const triggerRect = this.selectService.triggerRect()
     const wrapperRect = this.selectService.wrapperRect()
     const overlaySize = this.overlaySize()
-    const appendToBody = this.selectService.appendToBody()
+    const appendToBody = this.appendToBody()
     const align = this.align()
     const side = this.side()
     const sideOffset = this.sideOffset()
@@ -95,7 +99,7 @@ export class SelectOverlayComponent {
     effect(() => this.selectService.overlayElement.set(this.overlayElement()))
     effect(() => {
       const el = this.overlayElement()?.nativeElement
-      if (el && this.selectService.appendToBody()) {
+      if (el && this.appendToBody()) {
         document.body.appendChild(el)
       }
     })

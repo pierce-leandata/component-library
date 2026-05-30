@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, input, model, viewChild } from '@angular/core'
+import { Component, effect, ElementRef, inject, model, viewChild } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
 
 @Component({
@@ -9,10 +9,6 @@ import { SelectService } from '@components/select/select.service'
 export class SelectComponent {
   isOpen = model(false)
   value = model<string>()
-  /**
-   * Whether to reparent the overlay onto the `body`.
-   */
-  appendToBody = input<boolean>(false)
 
   private selectService = inject(SelectService)
 
@@ -21,7 +17,6 @@ export class SelectComponent {
   constructor() {
     this.selectService.isOpen = this.isOpen
     this.selectService.value = this.value
-    this.selectService.appendToBody = this.appendToBody
 
     effect(() => this.selectService.wrapperElement.set(this.wrapperElement()))
   }

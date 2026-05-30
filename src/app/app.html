@@ -87,7 +87,7 @@
   </div>
 
   <div #bounds class="bounds">
-    <pm-select [appendToBody]="true">
+    <pm-select>
       <button pmSelectTrigger [style.transform]="triggerTransform()">
         <pm-select-value> Placeholder </pm-select-value>
         <svg
@@ -101,7 +101,12 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
+      <pm-select-overlay
+        [align]="align()"
+        [side]="side()"
+        [sideOffset]="sideOffset()"
+        [appendToBody]="true"
+      >
         @for (group of optionGroups; track group.name) {
           <ul pmSelectItemGroup>
             <li pmSelectItemGroupLabel>{{ group.name }}</li>
@@ -132,7 +137,7 @@
         </ul>
       </pm-select-overlay>
     </pm-select>
-    <pm-select [appendToBody]="false">
+    <pm-select>
       <button pmSelectTrigger [style.transform]="triggerTransform()">
         <pm-select-value> Placeholder </pm-select-value>
         <svg
@@ -146,7 +151,12 @@
           <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
         </svg>
       </button>
-      <pm-select-overlay [align]="align()" [side]="side()" [sideOffset]="sideOffset()">
+      <pm-select-overlay
+        [align]="align()"
+        [side]="side()"
+        [sideOffset]="sideOffset()"
+        [appendToBody]="false"
+      >
         @for (group of optionGroups; track group.name) {
           <ul pmSelectItemGroup>
             <li pmSelectItemGroupLabel>{{ group.name }}</li>
