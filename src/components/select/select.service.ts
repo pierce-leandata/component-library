@@ -68,8 +68,7 @@ export class SelectService {
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.isSearchResetCancelled = true
-      window.removeEventListener('keydown', this.onKeyDown)
-      window.removeEventListener('focusout', this.onFocusOut)
+      this.removeEventListeners()
     })
   }
 
@@ -101,8 +100,7 @@ export class SelectService {
       this.isOpen.set(true)
     })
 
-    window.addEventListener('keydown', this.onKeyDown)
-    window.addEventListener('focusout', this.onFocusOut)
+    this.addEventListeners()
   }
 
   async close() {
@@ -110,8 +108,7 @@ export class SelectService {
     this.focusItem(undefined)
     this.isKeyboardNavigating.set(false)
 
-    window.removeEventListener('keydown', this.onKeyDown)
-    window.removeEventListener('focusout', this.onFocusOut)
+    this.removeEventListeners()
 
     // rAF forces us to wait until the rerender after setting isOpen to false,
     // so animations are allowed to start before checking for animations
@@ -232,6 +229,18 @@ export class SelectService {
     if (!this.isSearchResetCancelled && timeSinceLastSearchStringUpdate >= SEARCH_CLEAR_DELAY) {
       this.searchString = ''
     }
+  }
+
+  private addEventListeners() {
+    window.addEventListener('keydown', this.onKeyDown)
+    window.addEventListener('focusout', this.onFocusOut)
+    window.addEventListener('pointerdown', this.onPointerDown)
+  }
+
+  private removeEventListeners() {
+    window.removeEventListener('keydown', this.onKeyDown)
+    window.removeEventListener('focusout', this.onFocusOut)
+    window.removeEventListener('pointerdown', this.onPointerDown)
   }
 
   /**
@@ -368,12 +377,21 @@ export class SelectService {
     }
   }
 
-  // Will not fire when clicking on the select trigger if it's already focused
-  // Trigger handles closing on click
   private onFocusOut = (e: FocusEvent) => {
     const overlay = this.overlayElement()?.nativeElement
     const target = e.relatedTarget as Node | null
     if (!overlay?.contains(target)) {
+      this.close()
+    }
+  }
+
+  // trigger handles open/close on click, so we don't want to track pointer events on it
+  // otherwise the overlay closes on pointer down, then reopened when releasing (click event fires)
+  private onPointerDown = (e: PointerEvent) => {
+    const overlay = this.overlayElement()?.nativeElement
+    const trigger = this.triggerElement()?.nativeElement
+    const target = e.target as Node | null
+    if (!overlay?.contains(target) && !trigger?.contains(target)) {
       this.close()
     }
   }
