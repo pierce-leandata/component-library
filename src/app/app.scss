@@ -73,6 +73,7 @@ main {
 .controls {
   background: $surface-bg;
   border-radius: 8px;
+  overflow: auto;
 
   @media screen and (min-width: $breakpoint-md) {
     position: sticky;

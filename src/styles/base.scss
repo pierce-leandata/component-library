@@ -88,6 +88,13 @@
   &:focus-visible {
     background: $focus-bg;
   }
+
+  &[data-disabled='true'] {
+    cursor: default;
+    background: $disabled-bg;
+    color: $disabled-fg;
+    border-color: $disabled-border;
+  }
 }
 
 [data-select-trigger-icon] {
@@ -146,6 +153,21 @@ pm-select-value {
     &::after {
       content: '✓';
       margin-left: auto;
+    }
+  }
+}
+
+button {
+  &.pm-primary {
+    background: $primary;
+    color: $bg;
+    height: 40px;
+    padding-inline: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary-hover;
     }
   }
 }

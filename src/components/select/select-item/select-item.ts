@@ -59,8 +59,8 @@ export class SelectItemDirective {
   }
 
   onSelect() {
+    this.selectService.setValue(this.value())
     this.selectService.close()
-    this.selectService.value.set(this.value())
   }
 
   onKeyDown(e: KeyboardEvent) {

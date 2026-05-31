@@ -6,11 +6,16 @@ import { SelectService } from '@components/select/select.service'
   host: {
     type: 'button',
     '(click)': 'onClick()',
-    '(keydown)': 'onKeyDown($event)',
+    '(blur)': 'onBlur($event)',
     '[attr.aria-expanded]': 'selectService.isOpen()',
     '[attr.aria-controls]': 'selectService.overlayId',
     '[attr.aria-haspopup]': '"listbox"',
     '[attr.aria-activedescendant]': 'selectService.focusedItem()?.label?.nativeElement?.id',
+    '[attr.aria-readonly]': 'selectService.isReadOnly()',
+    '[attr.data-readonly]': 'selectService.isReadOnly()',
+    '[disabled]': 'selectService.isDisabled()',
+    '[attr.data-disabled]': 'selectService.isDisabled()',
+    '[attr.aria-required]': 'selectService.isRequired()',
     'data-select-trigger': '',
   },
 })
@@ -23,6 +28,8 @@ export class SelectTriggerDirective {
   }
 
   protected onClick() {
+    if (this.selectService.isDisabled() || this.selectService.isReadOnly()) return
+
     if (this.selectService.isOpen()) {
       this.selectService.close()
     } else {
@@ -31,6 +38,8 @@ export class SelectTriggerDirective {
   }
 
   protected onKeyDown(e: KeyboardEvent) {
+    if (this.selectService.isDisabled() || this.selectService.isReadOnly()) return
+
     // SelectService handles keyboard navigation when the overlay is open
     if (this.selectService.isOpen()) {
       return
@@ -65,6 +74,16 @@ export class SelectTriggerDirective {
         break
       case 'End':
         this.selectService.open({ focusItem: -1 })
+    }
+  }
+
+  protected onBlur(e: FocusEvent) {
+    if (this.selectService.isDisabled() || this.selectService.isReadOnly()) return
+
+    const target = e.relatedTarget as Node | null
+    const wrapper = this.selectService.wrapperElement()?.nativeElement
+    if (!wrapper?.contains(target)) {
+      this.selectService._onTouched()
     }
   }
 }

@@ -47,6 +47,10 @@ export class App {
   protected appendToBody = signal(false)
   protected useBoundingElement = signal(false)
 
+  protected disabled = signal(false)
+  protected readOnly = signal(false)
+  protected required = signal(false)
+
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
   )

@@ -26,8 +26,12 @@ export class SelectService {
 
   // ---- forwarded from select props ---- //
 
-  /** DO NOT SET DIRECTLY. Use `open()` and `close()` methods */
+  /** DO NOT SET DIRECTLY WITHIN SELECT. Use `open()` and `close()` methods */
   isOpen = signal(false)
+  isDisabled = signal(false)
+  isReadOnly = signal(false)
+  isRequired = signal(false)
+  /** DO NOT SET DIRECTLY WITHIN SELECT. Use `setValue()` method */
   value = signal<string | undefined>(undefined)
 
   // ------------------------------------- //
@@ -58,6 +62,15 @@ export class SelectService {
   })
 
   readonly overlayId = generateId()
+
+  // -------- Angular Forms callbacks --------
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  _onTouched = () => {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  _onChange: (value: string | undefined) => void = () => {}
+
+  // -----------------------------------------
 
   private searchString = ''
   private lastSearchTimestamp = 0
@@ -107,6 +120,12 @@ export class SelectService {
     this.isOpen.set(false)
     this.focusItem(undefined)
     this.isKeyboardNavigating.set(false)
+
+    // technically incorrect because the touched event should fire when the
+    // select loses focus, but there's no reliable way to achieve this from
+    // the trigger on mobile (blur/focusout don't fire), so firing on close
+    // is good enough
+    this._onTouched()
 
     this.removeEventListeners()
 
@@ -228,6 +247,11 @@ export class SelectService {
     }
   }
 
+  setValue(value: string | undefined) {
+    this.value.set(value)
+    this._onChange(value)
+  }
+
   private addEventListeners() {
     window.addEventListener('keydown', this.onKeyDown)
     window.addEventListener('focusout', this.onFocusOut)
@@ -283,7 +307,7 @@ export class SelectService {
   private selectFocusedItem() {
     if (!this.focusedItem()) return
 
-    this.value.set(this.focusedItem()!.value())
+    this.setValue(this.focusedItem()!.value())
     this.close()
   }
 

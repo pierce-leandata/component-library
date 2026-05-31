@@ -30,6 +30,36 @@
     </section>
     <hr />
     <section class="controls__section">
+      <h2>State</h2>
+      <fieldset>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="disabled()"
+            (change)="disabled.set($any($event.target).checked)"
+          />
+          Disabled
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="readOnly()"
+            (change)="readOnly.set($any($event.target).checked)"
+          />
+          Read only
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="required()"
+            (change)="required.set($any($event.target).checked)"
+          />
+          Required
+        </label>
+      </fieldset>
+    </section>
+    <hr />
+    <section class="controls__section">
       <h2>Overlay</h2>
       <fieldset>
         <legend>Align</legend>
@@ -117,7 +147,7 @@
   </div>
 
   <div #bounds class="bounds" [class.bounds--active]="useBoundingElement()">
-    <pm-select>
+    <pm-select [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
       <button pmSelectTrigger [style.transform]="triggerTransform()">
         <pm-select-value> Placeholder </pm-select-value>
         <svg
