@@ -157,6 +157,26 @@ pm-select-value {
   }
 }
 
+[data-highlighter] {
+  border: 2px solid var(--pm-highlighter-color);
+
+  &::before {
+    content: attr(data-highlighter-name);
+    position: absolute;
+    bottom: 100%;
+    left: -2px;
+    font-family: monospace;
+    font-size: 0.75rem;
+    background: var(--pm-highlighter-color);
+    color: white;
+    padding: 0.125rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 button {
   &.pm-primary {
     background: $primary;

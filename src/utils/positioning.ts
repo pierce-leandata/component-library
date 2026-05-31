@@ -1,3 +1,4 @@
+import { effect, ElementRef, Signal } from '@angular/core'
 import { OffsetSize } from './sizing'
 
 export type Alignment = 'start' | 'center' | 'end'
@@ -155,4 +156,48 @@ export function getOverlayPosition({
     position: appendToBody ? 'fixed' : 'absolute',
     computedSide,
   }
+}
+
+export function highlight(
+  element: Signal<ElementRef<HTMLElement> | undefined>,
+  options?: { name?: string; color?: string },
+) {
+  effect((onCleanup) => {
+    if (!element()) return
+
+    const highlighter = document.createElement('div')
+    highlighter.setAttribute('data-highlighter', '')
+    if (options?.name) {
+      highlighter.setAttribute('data-highlighter-name', options?.name)
+    }
+    document.body.appendChild(highlighter)
+
+    let animationId: number
+
+    const update = () => {
+      const rect = element()!.nativeElement.getBoundingClientRect()
+      highlighter.setAttribute(
+        'style',
+        `
+        --pm-highlighter-color: ${options?.color ?? 'red'};
+        position: fixed;
+        z-index: 99999999;
+        left: ${rect.left}px;
+        top: ${rect.top}px;
+        width: ${rect.width}px;
+        height: ${rect.height}px;
+        pointer-events: none;
+      `.replaceAll(/\s+/g, ' '),
+      )
+
+      animationId = requestAnimationFrame(update)
+    }
+
+    update()
+
+    onCleanup(() => {
+      document.body.removeChild(highlighter)
+      cancelAnimationFrame(animationId)
+    })
+  })
 }
