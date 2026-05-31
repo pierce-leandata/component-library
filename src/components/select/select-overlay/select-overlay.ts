@@ -12,6 +12,8 @@ import { SelectService } from '@components/select/select.service'
 import { trackOffsetSize } from '@utils/sizing'
 import { SelectItemDirective } from '../select-item/select-item'
 import { Alignment, getOverlayPosition, OverlayPosition, VerticalSide } from '@utils/positioning'
+import { Classes, Styles } from '@utils/types'
+import { getClassString, getStyleObject } from '@utils/utils'
 
 @Component({
   selector: 'pm-select-overlay',
@@ -49,6 +51,14 @@ export class SelectOverlayComponent {
    * Whether to reparent the overlay onto the `body`.
    */
   appendToBody = input<boolean>(false)
+  /**
+   * Classes to apply to nested elements.
+   */
+  classes = input<Classes<'overlay'>>()
+  /**
+   * Styles to apply to nested elements.
+   */
+  styles = input<Styles<'overlay'>>()
 
   protected selectService = inject(SelectService)
 
@@ -91,6 +101,9 @@ export class SelectOverlayComponent {
       boundingElement,
     })
   })
+
+  protected overlayClass = computed(() => getClassString(this.classes(), 'overlay'))
+  protected overlayStyle = computed(() => getStyleObject(this.styles(), 'overlay'))
 
   constructor() {
     effect(() => this.selectService.items.set(this.items()))

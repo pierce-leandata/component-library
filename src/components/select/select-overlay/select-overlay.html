@@ -7,6 +7,7 @@
     [attr.data-align]="align()"
     [attr.data-side]="positioning().computedSide"
     [style]="{
+      ...overlayStyle(),
       '--pm-select-trigger-width': `${selectService.triggerRect()?.width}px`,
       left: positioning().left,
       top: positioning().top,
@@ -15,6 +16,7 @@
     [id]="selectService.overlayId"
     (mousedown)="$event.preventDefault()"
     tabindex="-1"
+    [class]="overlayClass()"
   >
     <ng-content />
   </div>

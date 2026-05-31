@@ -1,5 +1,7 @@
 @if (selectedHtml(); as html) {
-  <span data-select-value [innerHTML]="html"></span>
+  <span data-select-value [innerHTML]="html" [class]="valueClass()" [style]="valueStyle()"></span>
 } @else {
-  <span data-select-placeholder><ng-content /></span>
+  <span data-select-placeholder [class]="placeholderClass()" [style]="placeholderStyle()"
+    ><ng-content
+  /></span>
 }
