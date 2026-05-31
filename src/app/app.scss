@@ -64,9 +64,12 @@ main {
     resize: both;
   }
 
-  pm-select {
+  .form-field {
     width: 100%;
     max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 }
 

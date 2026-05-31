@@ -6,6 +6,7 @@ import { SelectService } from '@components/select/select.service'
   host: {
     type: 'button',
     '(click)': 'onClick()',
+    '(keydown)': 'onKeyDown($event)',
     '(blur)': 'onBlur($event)',
     '[attr.aria-expanded]': 'selectService.isOpen()',
     '[attr.aria-controls]': 'selectService.overlayId',

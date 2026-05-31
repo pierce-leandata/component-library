@@ -147,57 +147,60 @@
   </div>
 
   <div #bounds class="bounds" [class.bounds--active]="useBoundingElement()">
-    <pm-select [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
-      <button pmSelectTrigger [style.transform]="triggerTransform()">
-        <pm-select-value> Placeholder </pm-select-value>
-        <svg
-          pmSelectTriggerIcon
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
+    <div class="form-field">
+      <label for="select">Label</label>
+      <pm-select [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
+        <button pmSelectTrigger id="select" [style.transform]="triggerTransform()">
+          <pm-select-value> Placeholder </pm-select-value>
+          <svg
+            pmSelectTriggerIcon
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+          >
+            <!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE -->
+            <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
+          </svg>
+        </button>
+        <pm-select-overlay
+          [align]="align()"
+          [side]="side()"
+          [sideOffset]="sideOffset()"
+          [appendToBody]="appendToBody()"
+          [boundingElement]="useBoundingElement() ? bounds : undefined"
         >
-          <!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE -->
-          <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
-        </svg>
-      </button>
-      <pm-select-overlay
-        [align]="align()"
-        [side]="side()"
-        [sideOffset]="sideOffset()"
-        [appendToBody]="appendToBody()"
-        [boundingElement]="useBoundingElement() ? bounds : undefined"
-      >
-        @for (group of optionGroups; track group.name) {
+          @for (group of optionGroups; track group.name) {
+            <ul pmSelectItemGroup>
+              <li pmSelectItemGroupLabel>{{ group.name }}</li>
+              @for (option of group.options; track option.value) {
+                <li pmSelectItem [value]="option.value">{{ option.label }}</li>
+              }
+            </ul>
+          }
           <ul pmSelectItemGroup>
-            <li pmSelectItemGroupLabel>{{ group.name }}</li>
-            @for (option of group.options; track option.value) {
-              <li pmSelectItem [value]="option.value">{{ option.label }}</li>
-            }
+            <li pmSelectItemGroupLabel>Rich HTML</li>
+            <li pmSelectItem value="rich-bold"><b>Bold</b> item</li>
+            <li pmSelectItem value="rich-italic"><i>Italic</i> item</li>
+            <li pmSelectItem value="rich-classes">
+              <span class="rich-row">
+                <span class="rich-dot"></span>
+                <span>With <b>classes</b></span>
+              </span>
+            </li>
+            <li pmSelectItem value="rich-template">
+              <ng-container *ngTemplateOutlet="template"></ng-container>
+            </li>
+            <li pmSelectItem value="rich-nested">
+              <span>
+                nested
+                <b>elems <i>work!</i></b>
+              </span>
+            </li>
           </ul>
-        }
-        <ul pmSelectItemGroup>
-          <li pmSelectItemGroupLabel>Rich HTML</li>
-          <li pmSelectItem value="rich-bold"><b>Bold</b> item</li>
-          <li pmSelectItem value="rich-italic"><i>Italic</i> item</li>
-          <li pmSelectItem value="rich-classes">
-            <span class="rich-row">
-              <span class="rich-dot"></span>
-              <span>With <b>classes</b></span>
-            </span>
-          </li>
-          <li pmSelectItem value="rich-template">
-            <ng-container *ngTemplateOutlet="template"></ng-container>
-          </li>
-          <li pmSelectItem value="rich-nested">
-            <span>
-              nested
-              <b>elems <i>work!</i></b>
-            </span>
-          </li>
-        </ul>
-      </pm-select-overlay>
-    </pm-select>
+        </pm-select-overlay>
+      </pm-select>
+    </div>
   </div>
 </main>
 

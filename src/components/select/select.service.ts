@@ -254,13 +254,11 @@ export class SelectService {
 
   private addEventListeners() {
     window.addEventListener('keydown', this.onKeyDown)
-    window.addEventListener('focusout', this.onFocusOut)
     window.addEventListener('pointerdown', this.onPointerDown)
   }
 
   private removeEventListeners() {
     window.removeEventListener('keydown', this.onKeyDown)
-    window.removeEventListener('focusout', this.onFocusOut)
     window.removeEventListener('pointerdown', this.onPointerDown)
   }
 
@@ -398,21 +396,18 @@ export class SelectService {
     }
   }
 
-  private onFocusOut = (e: FocusEvent) => {
-    const overlay = this.overlayElement()?.nativeElement
-    const target = e.relatedTarget as Node | null
-    if (!overlay?.contains(target)) {
-      this.close()
-    }
-  }
-
-  // trigger handles open/close on click, so we don't want to track pointer events on it
+  // don't need to track focusout events because tab keydown already handles closing
+  //
+  // trigger + associated label handle open/close on click, so we don't want to track pointer events on them
   // otherwise the overlay closes on pointer down, then reopened when releasing (click event fires)
   private onPointerDown = (e: PointerEvent) => {
     const overlay = this.overlayElement()?.nativeElement
     const trigger = this.triggerElement()?.nativeElement
-    const target = e.target as Node | null
-    if (!overlay?.contains(target) && !trigger?.contains(target)) {
+    const target = e.target as HTMLElement | null
+    const targetFor = target?.getAttribute('for')
+    const isTargetAssociatedLabel = !!targetFor && targetFor === trigger?.id
+
+    if (!overlay?.contains(target) && !trigger?.contains(target) && !isTargetAssociatedLabel) {
       this.close()
     }
   }
