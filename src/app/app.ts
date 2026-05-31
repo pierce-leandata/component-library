@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core'
 import { SelectOverlayComponent } from '@components/select/select-overlay/select-overlay'
-import { SelectComponent } from '@components/select/select/select'
+import { SelectDirective } from '@components/select/select/select'
 import { SelectTriggerDirective } from '@components/select/select-trigger/select-trigger'
 import { SelectItemDirective } from '@components/select/select-item/select-item'
 import { SelectItemGroupDirective } from '@components/select/select-item-group/select-item-group'
@@ -12,7 +12,7 @@ import { NgTemplateOutlet } from '@angular/common'
 @Component({
   selector: 'pm-app-root',
   imports: [
-    SelectComponent,
+    SelectDirective,
     SelectOverlayComponent,
     SelectTriggerDirective,
     SelectTriggerIconDirective,

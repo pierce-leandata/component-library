@@ -69,7 +69,12 @@ main {
     max-width: 200px;
     display: flex;
     flex-direction: column;
+    align-items: start;
     gap: 4px;
+
+    [data-select] {
+      width: 100%;
+    }
   }
 }
 

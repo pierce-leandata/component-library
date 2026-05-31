@@ -43,7 +43,8 @@ export class SelectService {
   focusedItem = signal<SelectItem | undefined>(undefined)
   overlayElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
   triggerElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
-  wrapperElement: WritableSignal<ElementRef<HTMLElement> | undefined> = signal(undefined)
+  /** Set by the `pmSelect` directive on init via `setWrapperElement()`. */
+  wrapperElement!: ElementRef<HTMLElement>
 
   readonly triggerRect = trackBoundingRect(this.triggerElement, {
     listenTo: {

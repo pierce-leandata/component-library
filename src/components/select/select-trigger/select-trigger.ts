@@ -82,7 +82,7 @@ export class SelectTriggerDirective {
     if (this.selectService.isDisabled() || this.selectService.isReadOnly()) return
 
     const target = e.relatedTarget as Node | null
-    const wrapper = this.selectService.wrapperElement()?.nativeElement
+    const wrapper = this.selectService.wrapperElement.nativeElement
     if (!wrapper?.contains(target)) {
       this.selectService._onTouched()
     }

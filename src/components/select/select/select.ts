@@ -1,20 +1,22 @@
-import { Component, effect, ElementRef, forwardRef, inject, model, viewChild } from '@angular/core'
+import { Directive, ElementRef, forwardRef, inject, model } from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 import { SelectService } from '@components/select/select.service'
 
-@Component({
-  selector: 'pm-select',
-  templateUrl: './select.html',
+@Directive({
+  selector: '[pmSelect]',
   providers: [
     SelectService,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SelectComponent),
+      useExisting: forwardRef(() => SelectDirective),
       multi: true,
     },
   ],
+  host: {
+    'data-select': '',
+  },
 })
-export class SelectComponent implements ControlValueAccessor {
+export class SelectDirective implements ControlValueAccessor {
   isOpen = model(false)
   isDisabled = model(false)
   isReadOnly = model(false)
@@ -22,8 +24,7 @@ export class SelectComponent implements ControlValueAccessor {
   value = model<string>()
 
   private selectService = inject(SelectService)
-
-  private wrapperElement = viewChild<ElementRef<HTMLElement>>('wrapper')
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef)
 
   constructor() {
     this.selectService.isOpen = this.isOpen
@@ -31,8 +32,7 @@ export class SelectComponent implements ControlValueAccessor {
     this.selectService.isReadOnly = this.isReadOnly
     this.selectService.isRequired = this.isRequired
     this.selectService.value = this.value
-
-    effect(() => this.selectService.wrapperElement.set(this.wrapperElement()))
+    this.selectService.wrapperElement = this.elementRef
   }
 
   writeValue(value: string | undefined) {

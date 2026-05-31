@@ -63,7 +63,7 @@
       <h2>Overlay</h2>
       <fieldset>
         <legend>Align</legend>
-        <pm-select [(value)]="align">
+        <div pmSelect [(value)]="align">
           <button pmSelectTrigger>
             <pm-select-value>Alignment</pm-select-value>
             <svg
@@ -82,7 +82,7 @@
               <li pmSelectItem [value]="option">{{ option }}</li>
             }
           </pm-select-overlay>
-        </pm-select>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -149,7 +149,7 @@
   <div #bounds class="bounds" [class.bounds--active]="useBoundingElement()">
     <div class="form-field">
       <label for="select">Label</label>
-      <pm-select [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
+      <div pmSelect [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
         <button pmSelectTrigger id="select" [style.transform]="triggerTransform()">
           <pm-select-value> Placeholder </pm-select-value>
           <svg
@@ -199,7 +199,7 @@
             </li>
           </ul>
         </pm-select-overlay>
-      </pm-select>
+      </div>
     </div>
   </div>
 </main>

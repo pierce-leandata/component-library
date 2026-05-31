@@ -1,4 +1,4 @@
-import { effect, ElementRef, signal, Signal } from '@angular/core'
+import { effect, ElementRef, isSignal, signal, Signal } from '@angular/core'
 
 type DOMRectWithoutToJSON = Omit<DOMRect, 'toJSON'>
 
@@ -19,12 +19,12 @@ export interface OffsetSize {
  * @returns up-to-date offset size signal
  */
 export function trackOffsetSize(
-  element: Signal<ElementRef<HTMLElement> | undefined>,
+  element: Signal<ElementRef<HTMLElement> | undefined> | ElementRef<HTMLElement> | undefined,
 ): Signal<OffsetSize | null> {
   const size = signal<OffsetSize | null>(null)
 
   effect((onCleanup) => {
-    const el = element()?.nativeElement
+    const el = isSignal(element) ? element()?.nativeElement : element?.nativeElement
     if (!el) {
       return
     }
@@ -55,7 +55,7 @@ export function trackOffsetSize(
  * @returns up-to-date DOMRect signal
  */
 export function trackBoundingRect(
-  element: Signal<ElementRef<HTMLElement> | undefined>,
+  element: Signal<ElementRef<HTMLElement> | undefined> | ElementRef<HTMLElement> | undefined,
   options: {
     /**
      * Which properties of the DOMRect to listen for changes in
@@ -68,14 +68,15 @@ export function trackBoundingRect(
   const rect = signal<DOMRect | null>(null)
 
   effect((onCleanup) => {
-    if (!element()?.nativeElement) {
+    const el = isSignal(element) ? element()?.nativeElement : element?.nativeElement
+    if (!el) {
       return
     }
 
     let animationId: number
 
     const updateRect = () => {
-      const newRect = element()!.nativeElement.getBoundingClientRect()
+      const newRect = el.getBoundingClientRect()
 
       const previousRect = rect()
       const hasValueChanged =
