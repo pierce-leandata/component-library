@@ -32,7 +32,7 @@ export class SelectDirective implements ControlValueAccessor {
     this.selectService.isReadOnly = this.isReadOnly
     this.selectService.isRequired = this.isRequired
     this.selectService.value = this.value
-    this.selectService.wrapperElement = this.elementRef
+    this.selectService.wrapperElement.set(this.elementRef)
   }
 
   writeValue(value: string | undefined) {
