@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "test": {
+    "pm-component-library": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -60,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "test:build:production"
+              "buildTarget": "pm-component-library:build:production"
             },
             "development": {
-              "buildTarget": "test:build:development"
+              "buildTarget": "pm-component-library:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -71,7 +71,7 @@
             "allowedHosts": ["leandata32.ngrok.dev"]
           }
         },
-        "test": {
+        "pm-component-library": {
           "builder": "@angular/build:unit-test"
         },
         "lint": {
