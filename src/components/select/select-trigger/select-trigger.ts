@@ -9,6 +9,7 @@ import { SelectService } from '@components/select/select.service'
     '(keydown)': 'onKeyDown($event)',
     '(blur)': 'onBlur($event)',
     '[attr.aria-expanded]': 'selectService.isOpen()',
+    '[attr.data-expanded]': 'selectService.isOpen()',
     '[attr.aria-controls]': 'selectService.overlayId',
     '[attr.aria-haspopup]': '"listbox"',
     '[attr.aria-activedescendant]': 'selectService.focusedItem()?.label?.nativeElement?.id',

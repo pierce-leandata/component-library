@@ -91,6 +91,11 @@
     background: $focus-bg;
   }
 
+  &[data-expanded='true']:focus-visible {
+    outline: none;
+    background: none;
+  }
+
   &[data-disabled='true'] {
     cursor: default;
     background: $disabled-bg;
