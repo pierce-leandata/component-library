@@ -1,4 +1,10 @@
-$primary: light-dark(#2b5798, #7aafff);
+$primary-base-chroma: 0.1875;
+$primary-base-lightness-light: 0.55;
+$primary-base-lightness-dark: 0.8;
+$primary: light-dark(
+  oklch($primary-base-lightness-light $primary-base-chroma var(--primary-base-hue)),
+  oklch($primary-base-lightness-dark $primary-base-chroma var(--primary-base-hue))
+);
 $fg: color-mix(in oklch, $primary 5%, light-dark(#1b1b1b, #f7f7f7));
 $bg: color-mix(in oklch, $primary 3%, light-dark(#f7f7f7, #1b1b1b));
 $primary-hover: color-mix(in oklch, white 10%, $primary);
@@ -7,7 +13,7 @@ $placeholder: color-mix(in oklch, $fg 50%, $bg);
 $overlay-bg: color-mix(in oklch, $primary 8%, $bg);
 $surface-bg: light-dark(white, #161616);
 $shadow: light-dark(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.15));
-$focus-bg: color-mix(in oklch, $primary 10%, $bg);
+$focus-bg: color-mix(in oklch, $primary 5%, $bg);
 $label: color-mix(in oklch, $fg 65%, $bg);
 $disabled-bg: color-mix(in oklch, $fg 15%, $bg);
 $disabled-fg: color-mix(in oklch, $fg 65%, $bg);

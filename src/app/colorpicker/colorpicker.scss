@@ -1,0 +1,109 @@
+@use '@styles/variables.scss' as *;
+
+.picker {
+  --spring-easing: linear(
+    0,
+    0.0203,
+    0.0733,
+    0.1486 6.1%,
+    0.6125 16.25%,
+    0.765 20.32%,
+    0.8275 22.35%,
+    0.9247 26.41%,
+    0.9604 28.45%,
+    1.0098 32.51%,
+    1.0253,
+    1.0358,
+    1.0422,
+    1.0453,
+    1.0459 42.67%,
+    1.0419 46.73%,
+    1.0133 60.96%,
+    1.003 69.08%,
+    0.9983 79.24%,
+    0.9991 99.56%
+  );
+  --spring-duration: 0.3137s;
+
+  position: fixed;
+  z-index: 1001;
+  bottom: 16px;
+  right: 16px;
+  height: 40px;
+  width: 40px;
+  border-radius: 999px;
+  background: $primary;
+  transition:
+    width var(--spring-duration) var(--spring-easing),
+    scale var(--spring-duration) var(--spring-easing);
+  display: grid;
+  place-items: center;
+  cursor: crosshair;
+
+  &:active {
+    scale: 0.93;
+  }
+
+  &[aria-expanded='false']:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded='true']:focus-visible {
+    outline: none;
+  }
+
+  &[aria-expanded='true'] {
+    scale: 1.07;
+    width: 200px;
+    background: linear-gradient(
+      to right,
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 0),
+        oklch($primary-base-lightness-dark $primary-base-chroma 0)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 60),
+        oklch($primary-base-lightness-dark $primary-base-chroma 60)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 120),
+        oklch($primary-base-lightness-dark $primary-base-chroma 120)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 180),
+        oklch($primary-base-lightness-dark $primary-base-chroma 180)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 240),
+        oklch($primary-base-lightness-dark $primary-base-chroma 240)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 300),
+        oklch($primary-base-lightness-dark $primary-base-chroma 300)
+      ),
+      light-dark(
+        oklch($primary-base-lightness-light $primary-base-chroma 360),
+        oklch($primary-base-lightness-dark $primary-base-chroma 360)
+      )
+    );
+  }
+
+  &__handle {
+    border: 2px solid white;
+    filter: drop-shadow(0 0 2px black);
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__icon {
+    color: $bg;
+    width: 20px;
+  }
+}

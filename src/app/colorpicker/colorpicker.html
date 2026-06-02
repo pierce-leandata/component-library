@@ -1,0 +1,32 @@
+<button
+  #picker
+  class="picker"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp()"
+  (blur)="closePicker()"
+  (keydown)="onKeyDown($event)"
+  (click)="onClick()"
+  [ariaExpanded]="isPicking()"
+  [ariaLabel]="isPicking() ? `${hue().toFixed(0)} degrees` : 'Change page accent color'"
+  [style.clip-path]="clipPath()"
+  [style.transform]="transform()"
+>
+  @if (isPicking()) {
+    <div class="picker__handle" [style.left]="`${huePct()}%`"></div>
+  } @else {
+    <svg
+      class="picker__icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+    >
+      <!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE -->
+      <path
+        fill="currentColor"
+        d="m20.71 5.63l-2.34-2.34a.996.996 0 0 0-1.41 0l-3.12 3.12l-1.93-1.91l-1.41 1.41l1.42 1.42L3 16.25V21h4.75l8.92-8.92l1.42 1.42l1.41-1.41l-1.92-1.92l3.12-3.12c.4-.4.4-1.03.01-1.42M6.92 19L5 17.08l8.06-8.06l1.92 1.92z"
+      />
+    </svg>
+  }
+</button>

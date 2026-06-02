@@ -8,6 +8,7 @@ import { SelectItemGroupLabelDirective } from '@components/select/select-item-gr
 import { SelectValueComponent } from '@components/select/select-value/select-value'
 import { SelectTriggerIconDirective } from '@components/select/select-trigger-icon/select-trigger-icon'
 import { NgTemplateOutlet } from '@angular/common'
+import { ColorpickerComponent } from './colorpicker/colorpicker'
 
 @Component({
   selector: 'pm-app-root',
@@ -21,6 +22,7 @@ import { NgTemplateOutlet } from '@angular/common'
     SelectItemGroupLabelDirective,
     SelectValueComponent,
     NgTemplateOutlet,
+    ColorpickerComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
