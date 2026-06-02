@@ -15,11 +15,6 @@ main {
 }
 
 ::ng-deep {
-  body:has(pm-app-root.use-trigger-width) .bounds [data-select-overlay],
-  .controls [data-select-overlay] {
-    width: var(--pm-select-trigger-width);
-  }
-
   .rich-row {
     display: flex;
     align-items: center;

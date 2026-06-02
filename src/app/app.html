@@ -77,7 +77,10 @@
               <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z" />
             </svg>
           </button>
-          <pm-select-overlay>
+          <pm-select-overlay
+            [sideOffset]="4"
+            [styles]="{ overlay: 'width: var(--pm-select-trigger-width)' }"
+          >
             @for (option of alignOptions; track option) {
               <li pmSelectItem [value]="option">{{ option }}</li>
             }
@@ -169,6 +172,9 @@
           [sideOffset]="sideOffset()"
           [appendToBody]="appendToBody()"
           [boundingElement]="useBoundingElement() ? bounds : undefined"
+          [styles]="{
+            overlay: useTriggerWidth() ? `width: var(--pm-select-trigger-width)` : '',
+          }"
         >
           @for (group of optionGroups; track group.name) {
             <ul pmSelectItemGroup>
