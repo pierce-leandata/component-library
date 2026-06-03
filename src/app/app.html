@@ -15,35 +15,6 @@
     </section>
     <hr />
     <section class="controls__section">
-      <h2>Trigger</h2>
-      <fieldset>
-        <legend>Transform</legend>
-        <label>
-          <span>X ({{ translateX() }}px)</span>
-          <input
-            type="range"
-            min="-100"
-            max="100"
-            step="5"
-            [value]="translateX()"
-            (input)="translateX.set(+$any($event.target).value)"
-          />
-        </label>
-        <label>
-          <span>Y ({{ translateY() }}px)</span>
-          <input
-            type="range"
-            min="-100"
-            max="100"
-            step="5"
-            [value]="translateY()"
-            (input)="translateY.set(+$any($event.target).value)"
-          />
-        </label>
-      </fieldset>
-    </section>
-    <hr />
-    <section class="controls__section">
       <h2>State</h2>
       <fieldset>
         <label>
@@ -61,14 +32,6 @@
             (change)="readOnly.set($any($event.target).checked)"
           />
           Read only
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            [checked]="required()"
-            (change)="required.set($any($event.target).checked)"
-          />
-          Required
         </label>
       </fieldset>
     </section>
