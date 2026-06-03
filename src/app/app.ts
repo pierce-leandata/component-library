@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core'
+import { Component, computed, effect, inject, signal } from '@angular/core'
 import { SelectOverlayComponent } from '@components/select/select-overlay/select-overlay'
 import { SelectDirective } from '@components/select/select/select'
 import { SelectTriggerDirective } from '@components/select/select-trigger/select-trigger'
@@ -7,7 +7,7 @@ import { SelectItemGroupDirective } from '@components/select/select-item-group/s
 import { SelectItemGroupLabelDirective } from '@components/select/select-item-group-label/select-item-group-label'
 import { SelectValueComponent } from '@components/select/select-value/select-value'
 import { SelectTriggerIconDirective } from '@components/select/select-trigger-icon/select-trigger-icon'
-import { NgTemplateOutlet } from '@angular/common'
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common'
 import { ColorpickerComponent } from './colorpicker/colorpicker'
 
 @Component({
@@ -31,7 +31,11 @@ import { ColorpickerComponent } from './colorpicker/colorpicker'
   },
 })
 export class App {
+  private readonly document = inject(DOCUMENT)
+
   protected readonly title = signal('test')
+
+  protected useCustomStyles = signal(true)
 
   protected align = signal<'start' | 'center' | 'end'>('center')
   protected side = signal<'top' | 'bottom'>('bottom')
@@ -56,6 +60,12 @@ export class App {
   protected triggerTransform = computed(
     () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
   )
+
+  constructor() {
+    effect(() => {
+      this.document.body.setAttribute('data-use-custom-styles', String(this.useCustomStyles()))
+    })
+  }
 
   protected readonly optionGroups: {
     name: string

@@ -1,5 +1,19 @@
 <main>
-  <div class="controls">
+  <div class="controls" data-use-custom-styles="true">
+    <section class="controls__section">
+      <h2>Styling</h2>
+      <fieldset>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="useCustomStyles()"
+            (change)="useCustomStyles.set($any($event.target).checked)"
+          />
+          Use custom styles
+        </label>
+      </fieldset>
+    </section>
+    <hr />
     <section class="controls__section">
       <h2>Trigger</h2>
       <fieldset>
