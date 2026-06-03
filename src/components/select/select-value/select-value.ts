@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
 import { Classes, Styles } from '@utils/types'
-import { getClassString, getStyleObject } from '@utils/utils'
+import { generateId, getClassString, getStyleObject } from '@utils/utils'
 
 @Component({
   selector: 'pm-select-value',
@@ -31,4 +31,6 @@ export class SelectValueComponent {
 
   protected valueStyle = computed(() => getStyleObject(this.styles(), 'value'))
   protected placeholderStyle = computed(() => getStyleObject(this.styles(), 'placeholder'))
+
+  id = generateId()
 }

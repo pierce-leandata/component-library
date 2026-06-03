@@ -2,6 +2,7 @@
   <div
     #overlayElement
     data-select-overlay
+    role="listbox"
     [attr.data-select-overlay-appended-to-body]="appendToBody()"
     [attr.data-state]="selectService.isOpen() ? 'open' : 'closed'"
     [attr.data-align]="align()"

@@ -1,7 +1,13 @@
 @if (selectedHtml(); as html) {
-  <span data-select-value [innerHTML]="html" [class]="valueClass()" [style]="valueStyle()"></span>
+  <span
+    data-select-value
+    [innerHTML]="html"
+    [id]="id"
+    [class]="valueClass()"
+    [style]="valueStyle()"
+  ></span>
 } @else {
-  <span data-select-placeholder [class]="placeholderClass()" [style]="placeholderStyle()"
+  <span data-select-placeholder [id]="id" [class]="placeholderClass()" [style]="placeholderStyle()"
     ><ng-content
   /></span>
 }

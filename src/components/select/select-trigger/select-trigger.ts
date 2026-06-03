@@ -1,5 +1,6 @@
-import { Directive, ElementRef, inject } from '@angular/core'
+import { contentChild, Directive, ElementRef, inject } from '@angular/core'
 import { SelectService } from '@components/select/select.service'
+import { SelectValueComponent } from '../select-value/select-value'
 
 @Directive({
   selector: 'button[pmSelectTrigger]',
@@ -13,6 +14,7 @@ import { SelectService } from '@components/select/select.service'
     '[attr.aria-controls]': 'selectService.overlayId',
     '[attr.aria-haspopup]': '"listbox"',
     '[attr.aria-activedescendant]': 'selectService.focusedItem()?.label?.nativeElement?.id',
+    '[attr.aria-labelledby]': 'valueRef()?.id',
     '[attr.aria-readonly]': 'selectService.isReadOnly()',
     '[attr.data-readonly]': 'selectService.isReadOnly()',
     '[disabled]': 'selectService.isDisabled()',
@@ -24,6 +26,8 @@ import { SelectService } from '@components/select/select.service'
 export class SelectTriggerDirective {
   protected selectService = inject(SelectService)
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef)
+
+  protected valueRef = contentChild(SelectValueComponent, { descendants: true })
 
   constructor() {
     this.selectService.triggerElement.set(this.elementRef)
