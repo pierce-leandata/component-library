@@ -35,21 +35,6 @@ export class ColorpickerComponent {
     const curveStartOffset = 25
     const curveInset = 20
 
-    // return `
-    //   shape(
-    //     from 0 ${curveInset}%,
-    //     line to ${huePct - curveStartOffset}% ${curveInset}%,
-    //     curve to ${huePct}% 0% with ${huePct - curveStartOffset / 2}% ${curveInset}% / ${huePct - curveStartOffset / 2}% 0%,
-    //     curve to ${huePct + curveStartOffset}% ${curveInset}% with ${huePct + curveStartOffset / 2}% 0 / ${huePct + curveStartOffset / 2}% ${curveInset}%,
-    //     line to 100% ${curveInset}%,
-    //     line to 100% ${100 - curveInset}%,
-    //     line to ${huePct + curveStartOffset}% ${100 - curveInset}%,
-    //     curve to ${huePct}% 100% with ${huePct + curveStartOffset / 2}% ${100 - curveInset}% / ${huePct + curveStartOffset / 2}% 100%,
-    //     curve to ${huePct - curveStartOffset}% ${100 - curveInset}% with ${huePct - curveStartOffset / 2}% 100% / ${huePct - curveStartOffset / 2}% ${100 - curveInset}%,
-    //     line to 0 ${100 - curveInset}%
-    //   )
-    // `
-
     return `
       shape(
         from -20% 0,
@@ -64,13 +49,6 @@ export class ColorpickerComponent {
         line to -20% 100%
       )
     `
-  })
-
-  protected transform = computed(() => {
-    if (!this.isPicking()) return ''
-
-    // return `rotateZ(${(this.hue() - 180) / 40}deg)`
-    return ''
   })
 
   protected picker = viewChild<ElementRef<HTMLDivElement>>('picker')

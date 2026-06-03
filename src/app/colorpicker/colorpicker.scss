@@ -39,6 +39,8 @@
   display: grid;
   place-items: center;
   cursor: crosshair;
+  // disables scrolling/panning while dragging
+  touch-action: none;
 
   &:active {
     scale: 0.93;

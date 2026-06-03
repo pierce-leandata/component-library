@@ -10,7 +10,6 @@
   [ariaExpanded]="isPicking()"
   [ariaLabel]="isPicking() ? `${hue().toFixed(0)} degrees` : 'Change page accent color'"
   [style.clip-path]="clipPath()"
-  [style.transform]="transform()"
 >
   @if (isPicking()) {
     <div class="picker__handle" [style.left]="`${huePct()}%`"></div>
