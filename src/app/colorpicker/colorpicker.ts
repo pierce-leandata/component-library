@@ -125,17 +125,58 @@ export class ColorpickerComponent {
   }
 
   onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      this.closePicker()
-    } else if (['Enter', ' '].includes(e.key) && this.isClickPicking()) {
+    if (
+      ![
+        'Escape',
+        'Enter',
+        ' ',
+        'ArrowRight',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowUp',
+        'PageDown',
+        'PageUp',
+        'Home',
+        'End',
+      ].includes(e.key)
+    ) {
+      return
+    }
+
+    if (!['Escape', 'Enter', ' '].includes(e.key)) {
+      this.isClickPicking.set(true)
       e.preventDefault()
-      this.closePicker()
-    } else if (['ArrowRight', 'ArrowDown'].includes(e.key) && this.isClickPicking()) {
-      e.preventDefault()
-      this.setHue(this.hue() + 5)
-    } else if (['ArrowLeft', 'ArrowUp'].includes(e.key) && this.isClickPicking()) {
-      e.preventDefault()
-      this.setHue(this.hue() - 5)
+    }
+
+    switch (e.key) {
+      case 'Escape':
+      case 'Enter':
+      case ' ':
+        if (this.isClickPicking()) {
+          e.preventDefault()
+          this.closePicker()
+        }
+        break
+      case 'ArrowRight':
+      case 'ArrowDown':
+        this.setHue(this.hue() + 5)
+        break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        this.setHue(this.hue() - 5)
+        break
+      case 'PageDown':
+        this.setHue(this.hue() + 60)
+        break
+      case 'PageUp':
+        this.setHue(this.hue() - 60)
+        break
+      case 'Home':
+        this.setHue(0)
+        break
+      case 'End':
+        this.setHue(360)
+        break
     }
   }
 
