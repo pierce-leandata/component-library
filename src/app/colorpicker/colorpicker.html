@@ -8,7 +8,12 @@
   (keydown)="onKeyDown($event)"
   (click)="onClick()"
   [ariaExpanded]="isPicking()"
-  [ariaLabel]="isPicking() ? `${hue().toFixed(0)} degrees` : 'Change page accent color'"
+  [ariaLabel]="
+    isPicking()
+      ? `${hue().toFixed(0)} degrees`
+      : `Change page accent color (currently ${hue().toFixed(0)} degrees)`
+  "
+  aria-live="polite"
   [style.clip-path]="clipPath()"
 >
   @if (isPicking()) {
