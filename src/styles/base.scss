@@ -21,7 +21,7 @@
   padding: 4px;
   background: $overlay-bg;
   border-radius: 8px;
-  max-height: 280px;
+  max-height: 300px;
   overflow: auto;
   box-shadow: 2px 3px 8px $shadow;
   transition:
@@ -80,7 +80,7 @@
   border-radius: 8px;
   border: 2px solid $border;
   background: $surface-bg;
-  padding-inline: 12px;
+  padding-inline: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -132,8 +132,8 @@ pm-select-value {
 }
 
 [data-select-item-group-label] {
-  padding: 6px 8px;
-  min-height: 32px;
+  padding: 8px 12px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   color: color-mix(in oklch, $fg 50%, $overlay-bg);
@@ -141,8 +141,8 @@ pm-select-value {
 }
 
 [data-select-item] {
-  padding: 4px 8px;
-  min-height: 32px;
+  padding: 8px 12px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   gap: 8px;
