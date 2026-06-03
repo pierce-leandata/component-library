@@ -2,6 +2,7 @@
 
 [data-use-custom-styles='true'] {
   [data-select-overlay] {
+    z-index: 1000;
     width: 180px;
     padding: 4px;
     background: $overlay-bg;
