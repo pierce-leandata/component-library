@@ -43,8 +43,8 @@ export class App {
   protected readonly alignOptions = ['start', 'center', 'end'] as const
   protected readonly sideOptions = ['top', 'bottom'] as const
 
-  protected translateX = signal(0)
-  protected translateY = signal(0)
+  protected screenX = signal(0)
+  protected screenY = signal(0)
 
   protected sideOffset = signal(0)
 
@@ -57,9 +57,7 @@ export class App {
   protected readOnly = signal(false)
   protected required = signal(false)
 
-  protected triggerTransform = computed(
-    () => `translate(${this.translateX()}px, ${this.translateY()}px)`,
-  )
+  protected screenTransform = computed(() => `translate(${this.screenX()}vw, ${this.screenY()}vh)`)
 
   constructor() {
     effect(() => {

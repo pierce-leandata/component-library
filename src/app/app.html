@@ -15,6 +15,34 @@
     </section>
     <hr />
     <section class="controls__section">
+      <h2>Offset</h2>
+      <fieldset>
+        <label>
+          <span>X ({{ screenX() }}vw)</span>
+          <input
+            type="range"
+            min="-100"
+            max="100"
+            step="2"
+            [value]="screenX()"
+            (input)="screenX.set(+$any($event.target).value)"
+          />
+        </label>
+        <label>
+          <span>Y ({{ screenY() }}vh)</span>
+          <input
+            type="range"
+            min="-100"
+            max="100"
+            step="2"
+            [value]="screenY()"
+            (input)="screenY.set(+$any($event.target).value)"
+          />
+        </label>
+      </fieldset>
+    </section>
+    <hr />
+    <section class="controls__section">
       <h2>State</h2>
       <fieldset>
         <label>
@@ -127,10 +155,10 @@
   </div>
 
   <div #bounds class="bounds" [class.bounds--active]="useBoundingElement()">
-    <div class="form-field">
+    <div class="form-field" [style.transform]="screenTransform()">
       <label for="select">Label</label>
       <div pmSelect [isDisabled]="disabled()" [isReadOnly]="readOnly()" [isRequired]="required()">
-        <button pmSelectTrigger id="select" [style.transform]="triggerTransform()">
+        <button pmSelectTrigger id="select">
           <pm-select-value> Placeholder </pm-select-value>
           <svg
             pmSelectTriggerIcon
